@@ -1,0 +1,132 @@
+.head-container {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-status {
+    text-align: center;
+    width: 180px;
+    color: white;
+}
+
+.header-info *{
+    margin: 0;
+    padding: 0;
+}
+.header-info span{
+    font-size: 20px;
+}
+.header-info .sp-info{
+    margin-left: 10px;
+}
+.header-status i{
+    width: 30px;
+}
+.head-pnl {
+    margin: auto;
+    width: 100%;
+}
+.header-tags {
+    display: flex;
+}
+.btn-add {
+    right: 60px;
+    position: absolute;
+    z-index: 1;
+    margin: 8px 10px;
+    width: 120px;
+    height: 35px;
+    background-color: rgb(32, 133, 199);
+    color: white;
+    text-align: center;
+    border: 0;
+    border-radius: 25px;
+}
+.btn-add:hover{
+    background-color: rgb(118, 185, 229);
+    box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+    cursor: pointer;
+}
+.body-content {
+    display: flex;
+    justify-content: space-between;
+}
+.pnl {
+    border-radius: 10px;
+}
+.pnl.box-camera{
+    width: 40%;
+    height: auto;
+    min-height: 580px;
+}
+.pnl.box-command-monitor{
+    width: 58%;
+    height: auto;
+}
+.pnl.box-machineView{
+    margin: 20px 0;
+    height: auto;
+}
+h5{
+    margin: 0;
+    padding: 8px 0;
+    text-align: center;
+    font-size: 24px;
+    font-weight: 30;
+    color: white;
+    background-color: #005992;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+.text-members{
+    margin: 0;
+    padding: 15px;
+}
+
+.table-container{
+    height: 530px;
+    overflow: auto;
+}
+/* tr:nth-child(even){background-color: #f2f2f2} */
+.table-tag th {
+    text-align: left;
+    padding-left: 10px;
+    font-weight: 16;
+    background-color: #3282B8;
+    color: white;
+  }
+.table-tag{
+    border-collapse: collapse;
+    width: 100%;
+    border-color: rgb(0, 0, 0);
+    font-size: 18px;
+}
+.table-tag td{
+    text-align: left;
+    padding: 2px 10px;
+    font-weight: 10;
+}
+.td-indicator {
+    max-width: 180px;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1; 
+  }
+   
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888; 
+  }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555; 
+  }

@@ -1,0 +1,170 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div id="addMoniform" class="form">
+        <!-- <span onclick="document.getElementById('addMoniform').style.display='none'" class="close" title="Close Modal">&times;</span> -->
+        <form class="form-content" action="../addIndicator{{member.id}}/" method="post">
+            <div class="form-container">
+                {% csrf_token %}
+                <h1>Add item : {{member.machine_name}}</h1>
+                <hr>
+                <label>Address :</label>
+                <input type="text" id="address" name="address" placeholder="address"><br>
+                <label>Indicator name :</label>
+                <input type="text" id="name" name="name" placeholder="Indicator-01"><br>
+                <label>Description :</label>
+                <input type="text" id="description" name="description" placeholder="Detail ..."><br>
+                <label>Data type :</label>
+                <select id="data_type" name="data_type" onchange="getDataType()">
+                    <option value="none">None</option>
+                    <option value="X_B">X (Bit)</option>
+                    <option value="X_W">X (Word)</option>
+                    <option value="Y_B">Y (Bit)</option>
+                    <option value="Y_W">Y (Word)</option>
+                    <option value="M_B">M (Bit)</option>
+                    <option value="SM_B">SM (Bit)</option>
+                    <option value="D_W">D (Word)</option>
+                    <option value="S_B">S (Bit)</option>
+                    <option value="T_B">T (Bit)</option>
+                    <option value="T_W">T (Word)</option>
+                    <option value="C_B">C (Bit)</option>
+                    <option value="C_W">C (Word)</option>
+                    <option value="HC_B">HC (Bit)</option>
+                    <option value="HC_W">HC (Word)</option>
+                    <option value="E_W">E (Word)</option>
+                </select><br>
+                <p id="data_type_error" style="display: none; color: red;">Data type can't be None</p>
+                <div class="indicatorSelect" id="indicatorBit" style="display: none;">
+                    <select id="output_type" name="output_type">
+                        <option value="indicator">Indicator</option>
+                    </select><br>
+                </div>
+                <div class="indicatorSelect" id="indicatorWord" style="display: none;">
+                    <select id="output_type" name="output_type">
+                        <option value="data-display">Data Display</option>
+                        <option value="data-graph">Graph</option>
+                    </select><br>
+                </div>
+                <label>Show this indicator to Overview :</label>
+                <input type="checkbox" id="flag" name="flag" ><br>
+                <hr>
+                <div class="clearfix">
+                    <button class="addbtn" type="submit">Add</button>
+                    <button type="button" onclick="document.getElementById('addMoniform').style.display='none'" class="cancelbtn">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- EDIT FORM -->
+    <div id="editMoniform" class="form">
+        <span  onclick="document.getElementById('editMoniform').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <form class="form-content" action="../updateIndicator/{{member.id}}" method="post">
+            <div class="form-container">
+                {% csrf_token %}
+                <h1>Add item</h1>
+                <hr>
+                <label>Address :</label>
+                <input type="text" id="address" name="address" value="{{indicator_item.address}}"><br>
+                <label>Indicator name :</label>
+                <input type="text" id="name" name="name" value="{{indicator_item.name}}"><br>
+                <label>Description :</label>
+                <input type="text" id="description" name="description" value="{{indicator_item.description}}"><br>
+                <label>Data type :</label>
+                <select id="data_type" name="data_type">
+                    <option value="X_B">X (Bit)</option>
+                    <option value="X_W">X (Word)</option>
+                    <option value="Y_B">Y (Bit)</option>
+                    <option value="Y_W">Y (Word)</option>
+                    <option value="M_B">M (Bit)</option>
+                    <option value="SM_B">SM (Bit)</option>
+                    <option value="D_W">D (Word)</option>
+                    <option value="S_B">S (Bit)</option>
+                    <option value="T_B">T (Bit)</option>
+                    <option value="T_W">T (Word)</option>
+                    <option value="C_B">C (Bit)</option>
+                    <option value="C_W">C (Word)</option>
+                    <option value="HC_B">HC (Bit)</option>
+                    <option value="HC_W">HC (Word)</option>
+                    <option value="E_W">E (Word)</option>
+                </select><br>
+                <p id="data_type_error" style="display: none; color: red;">Data type can't be None</p>
+                <div class="indicatorSelect" id="indicatorBit" style="display: none;">
+                    <select id="output_type" name="output_type">
+                        <option value="indicator">Indicator</option>
+                    </select><br>
+                </div>
+                <div class="indicatorSelect" id="indicatorWord" style="display: none;">
+                    <select id="output_type" name="output_type">
+                        <option value="data-display">Data Display</option>
+                        <option value="data-graph">Graph</option>
+                    </select><br>
+                </div>
+                <label>Show this indicator to Overview :</label>
+                <input type="checkbox" id="flag" name="flag" value="{{indicator_item.flag}}"><br>
+                <hr>
+                <div class="clearfix">
+                    <button class="addbtn" type="submit">Update</button>
+                    <a id="cnl" href="../" type="button" class="cancelbtn">Cancel</a>
+                    <!-- <button type="button" onclick="document.getElementById('editMoniform').style.display='none'" class="cancelbtn" >Cancel</button> -->
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        const getDataType = () =>{
+        let inputValue = document.getElementById("data_type").value; 
+        let value = inputValue.split("_")[1]; 
+        if(value == "B"){
+            document.getElementById('indicatorBit').style.display = "block";
+            document.getElementById('indicatorWord').style.display = "none";
+            document.getElementById('data_type_error').style.display = "none";
+        }
+        else if(value == "W"){
+            document.getElementById('indicatorBit').style.display = "none";
+            document.getElementById('indicatorWord').style.display = "block";
+            document.getElementById('data_type_error').style.display = "none";
+        }
+        else{
+            console.log(value);
+            document.getElementById('data_type_error').style.display = "block";
+            document.getElementById('indicatorBit').style.display = "none";
+            document.getElementById('indicatorWord').style.display = "none";
+        }
+        }
+    </script>
+    <script>
+        document.getElementById("cnl").onclick = function() {cancelEdit()};
+        function cancelEdit() {
+            document.getElementById('editMoniform').style.display = "none";
+        }
+    </script>
+    <script>
+        // Get the modal
+        var editMoniform = document.getElementById('editMoniform');
+        var addMoniform = document.getElementById('addMoniform');
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == editMoniform) {
+            editMoniform.style.display = "none";
+            location.href="../";
+        }
+        else if(event.target == addMoniform) {
+            addMoniform.style.display = "none";
+        }
+        }
+    </script>
+        // {% if OpeneditMoniform %}
+        //     <script>
+        //         document.getElementById('editMoniform').style.display = "block";
+        //     </script>
+        // {% endif %}
+</body>
+</html>

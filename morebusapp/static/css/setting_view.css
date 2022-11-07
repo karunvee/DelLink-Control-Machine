@@ -1,0 +1,77 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.content-container {
+  /* background-color: rgb(60, 103, 133); */
+  margin-top: 72px;
+  margin-left: -8px;
+  margin-right: -8px;
+  height: 800px;
+  padding: 2rem 10%;
+}
+@keyframes background-fade {
+  0% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.content-block{
+  color: #fff;
+}
+table {
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+td.last{
+  width: 200px;
+  text-align: center;
+}
+tr:nth-child(even){background-color: rgb(98, 135, 161)}
+
+th {
+  background-color: #25aae1;
+  color: white;
+}
+
+a.button {
+  -webkit-appearance: button;
+  -moz-appearance: button;
+  appearance: button;
+
+  text-decoration: none;
+  color: white;
+}
+.button{
+  padding: 5px 20px;
+  margin: 0 auto;
+  border: none;
+  cursor: pointer;
+  width: auto;
+  border-radius: 8px;
+  box-shadow: 3px 3px 1px rgb(46, 51, 53, .5);
+}
+.button.delete{
+  background-image: linear-gradient(to right, rgb(214, 45, 45) , rgb(255, 126, 70));
+}
+.button.edit{
+  background-image: linear-gradient(to right, rgb(15, 95, 31) , rgb(147, 217, 107));
+}
+.button.delete:hover {
+  background-image: linear-gradient(to right, rgb(109, 19, 19) , rgb(191, 0, 0));
+  background-color: #b41f1f;
+  box-shadow: none;
+}
+.button.edit:hover {
+  background-image: linear-gradient(to right, rgb(12, 60, 22) , rgb(0, 124, 25));
+  background-color: #b41f1f;
+  box-shadow: none;
+}

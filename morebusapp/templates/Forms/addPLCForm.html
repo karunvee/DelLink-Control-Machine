@@ -1,0 +1,118 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div id="addform" class="form">
+        <span onclick="document.getElementById('addform').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <form class="form-content" action="addPLC/" method="post">
+            <div class="form-container">
+                {% csrf_token %}
+                <h1>PLC Members</h1>
+                <hr>
+                <label>Machine name :</label>
+                <input type="text" id="machine_name" name="machine_name" placeholder="Auto Glue"><br>
+                <label>Line :</label>
+                <select id="line_name" name="line_name">
+                    <option value="CN-01">CN-01</option>
+                    <option value="CN-02">CN-02</option>
+                    <option value="CN-03">CN-03</option>
+                    <option value="CN-04">CN-04</option>
+                    <option value="CN-05">CN-05</option>
+                </select><br>
+                <!-- <input type="text" id="line_name" name="line_name" placeholder="CN-01"><br> -->
+                <label>IP :</label>
+                <input type="text" id="ip" name="ip" placeholder="192.168.1.X"><br>
+                <label>Port :</label>
+                <input type="text" id="port" name="port" placeholder="502"><br>
+                <label>PLC type :</label>
+                <select id="plc_model" name="plc_model">
+                    <option value="Delta DVP">Delta DVP</option>
+                    <option value="Delta AS">Delta AS</option>
+                </select><br>
+                <label>Owner :</label>
+                <input type="text" id="owner" name="owner" placeholder="Unknown"><br>
+                <label for="pic_path">Picture :</label>
+                <input type="file" id="pic_path" name="pic_path" accept="image/png, image/jpg"><br><br>
+                <hr>
+                <div class="clearfix">
+                    <button class="addbtn" type="submit">Add</button>
+                    <button type="button" onclick="document.getElementById('addform').style.display='none'" class="cancelbtn">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    <!-- EDIT FORM -->
+    <div id="editform" class="form">
+        <span  onclick="document.getElementById('editform').style.display='none'" class="close" title="Close Modal">&times;</span>
+        <form class="form-content" action="../updatePLC/{{member.id}}" method="post">
+            <div class="form-container">
+                {% csrf_token %}
+                <h1>PLC Members (Edit)</h1>
+                <hr>
+                <label>Machine name :</label>
+                <input type="text" id="machine_name" name="machine_name" value="{{ member.machine_name }}"><br>
+                <label>Line :</label>
+                <select id="line_name" name="line_name" selected="{{ member.line_name }}">
+                    <option value="CN-01">CN-01</option>
+                    <option value="CN-02">CN-02</option>
+                    <option value="CN-03">CN-03</option>
+                    <option value="CN-04">CN-04</option>
+                    <option value="CN-05">CN-05</option>
+                </select><br>
+                <label>IP :</label>
+                <input type="text" id="ip" name="ip" value="{{ member.ip }}"><br>
+                <label>Port :</label>
+                <input type="text" id="port" name="port" value="{{ member.port }}"><br>
+                <label>PLC type :</label>
+                <select id="plc_model" name="plc_model" selected="{{ member.plc_model }}">
+                    <option value="Delta DVP">Delta DVP</option>
+                    <option value="Delta AS">Delta AS</option>
+                </select><br>
+                <label>Owner :</label>
+                <input type="text" id="owner" name="owner" value="{{ member.owner }}"><br>
+                <label for="pic_path">Picture : {{ member.pic_path }}</label>
+                <input class="filebrowse" type="file" id="pic_path" name="pic_path" accept="image/png, image/jpg"><br><br>
+                <hr>
+                <div class="clearfix">
+                    <button class="addbtn" type="submit">Update</button>
+                    <a id="cnl" href="../" type="button" class="cancelbtn">Cancel</a>
+                    <!-- <button type="button" onclick="document.getElementById('editform').style.display='none'" class="cancelbtn" >Cancel</button> -->
+                </div>
+            </div>
+        </form>
+    </div>
+    <script>
+        document.getElementById("cnl").onclick = function() {cancelEdit()};
+        function cancelEdit() {
+            document.getElementById('editform').style.display = "none";
+        }
+    </script>
+    {% if OpenEditForm %}
+    <script>
+        document.getElementById('editform').style.display = "block";
+    </script>
+    {% endif %}
+    <script>
+        // Get the modal
+        var editform = document.getElementById('editform');
+        var addform = document.getElementById('addform');
+        // When the user clicks anywhere outside of the modal, close it
+        window.onclick = function(event) {
+        if (event.target == editform) {
+            editform.style.display = "none";
+            location.href="../";
+        }
+        else if(event.target == addform) {
+            addform.style.display = "none";
+        }
+        }
+    </script>
+</body>
+</html>

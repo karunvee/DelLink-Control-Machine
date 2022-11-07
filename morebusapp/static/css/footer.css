@@ -1,0 +1,44 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.footer{
+    background: rgb(0, 89, 146);
+    height: 50px;
+    display:  flex;
+    justify-content:  space-between;
+    align-items: center;
+    color: #fff;
+    position: absolute;
+    left: 0;
+    right: 0;
+}
+.footer img{
+    margin-left: auto;
+    width: 40px;
+    border-radius: 15px;
+    display: inline-block;
+}
+.footer span{
+    margin-left: 15px;
+    width: auto;
+    border-radius: 15px;
+    text-align: center;
+    text-decoration: none;
+}
+.footer p{
+    margin-right: auto;
+}
+.footer div{
+    margin: 0 auto;
+   
+}
+.company-name{
+    display: flex;
+    align-items: center;
+}
+
+@media screen and (max-width: 600px){
+    .footer{
+        font-size: 80%;
+    }
+}
