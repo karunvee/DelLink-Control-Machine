@@ -16,7 +16,8 @@
         <div class="content"><h3>Overview</h3>
             <div id="mList" class="machine-items">
                 {% for val in response %}
-                <div class="machine-item {{status}}" onclick="location.href='../machine_view/{{val.deviceId}}';">
+                <div class="machine-item {{status}}" onclick="location.href='{% url 'item_view' val.deviceId %}';">
+                <!-- <div class="machine-item {{status}}" onclick="location.href='../machine_view/{{val.deviceId}}';"> -->
                     <div class="item-header">
                         <h5>{{val.comment}}</h5>
                         {% if val.status == 0 %}
@@ -25,39 +26,11 @@
                         <span class="Online"> Online </span>
                         {% endif %}
                     </div>
-                    <p>ID : {{val.deviceId}}, IP : {{val.ip}}</p>
+                    <p>IP : {{val.ip}} &emsp;Device : {{val.name}}-ID : {{val.deviceId}} </p>
                 </div>
                 {% endfor %}
             </div>
         </div>
     </section>
-    <script>
-        // function showData(data){
-        //     let output = "";
-        //     for(let val of data){
-        //         let status = "";
-        //         if(val.status == '1'){
-        //             status = 'Online';
-        //             ClsHighlight = 'HighLight';
-        //         }
-        //         else{
-        //             status = 'Offline';
-        //             ClsHighlight = "";
-        //         }
-        //         output += `<div class="machine-item ${ClsHighlight}" onclick="location.href='../machine_view/${val.deviceId}';">
-        //                     <div class="item-header">
-        //                         <h5>${val.comment}</h5>
-        //                         <span class="${status}"> ${status} </span>
-        //                     </div>
-        //                     <p>ID : ${val.deviceId}  IP : ${val.ip}</p>
-        //                   </div>`;
-        //     }
-        //     document.querySelector('#mList').innerHTML = output;   
-        // }
-        // fetch('http://192.168.1.254:9000/api/v1/devices')
-        // .then(response => response.json())
-        // .then(data => showData(data));
-
-    </script>
 </body>
 </html>

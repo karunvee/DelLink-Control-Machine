@@ -13,14 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import include, path
 from morebusapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.home_view, name='home_view'),
-    path('machine_view/<int:id>/', views.item_view, name='item_view'),
-    path('setting/', views.setting_view, name='setting_view'),
-
+    url(r'^$', views.home_view, name='home_view'),
+    url(r'^machine_view/id(?P<id>[0-9]+)/$', views.item_view, name='item_view'),
+    url(r'^machine_view/id(?P<id>[0-9]+)/writeData/tag(?P<pk>[0-9]+)/$', views.writeData, name='writeData'),
+    url(r'setting/$', views.setting_view, name='setting_view'),
 ]
