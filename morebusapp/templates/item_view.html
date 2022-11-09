@@ -42,6 +42,9 @@
             <section class="body-content">
                 <div class="pnl box-camera">
                     <h5 class="head-pnl">RTSP camera</h5>
+                    <iframe class="ip-camera" 
+                    src="https://www.youtube.com/embed/5obJXH8gU-E">
+                    </iframe>
                 </div>
                 <div class="pnl box-command-monitor">
                     <h5 class="head-pnl">Monitor & Control</h5>
@@ -61,7 +64,7 @@
                                 <th>Tag ID</th>
                                 <th>Register</th>
                                 <th>Value</th>
-                                <th class="td-indicator">Indicator</th>
+                                <th class="th-indicator">Indicator</th>
                             </tr>
                             {% for val in tag_data %}
                             <tr>
@@ -75,8 +78,10 @@
                                     <!-- <input type="button" onclick="location.href='{% url 'writeData' mID val.tid %}';"/> -->
                                     {% csrf_token %}
                                     <button>Unassigned</button>
-                                    <button class="btn-tag-write" type="submit">writeData</button>
-                                    <input type="text" id="TagValue" name="TagValue" class="tag-add-value"/>
+                                    <div class="pnl-write-data">
+                                        <button class="btn-tag-write" type="submit">writeData</button>
+                                        <input type="text" id="TagValue" name="TagValue" class="tag-add-value"/>
+                                    </div>
                                 </form>
                                 </td>
                             </tr>
