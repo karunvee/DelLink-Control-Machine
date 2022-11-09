@@ -30,7 +30,7 @@
                             <th>Tag ID</th>
                             <th>Register</th>
                             <th>Value</th>
-                            <th class="td-indicator">Indicator</th>
+                            <th class="th-indicator">Indicator</th>
                         </tr>`;
             for(let val of data){
                 output += `<tr>
@@ -41,8 +41,10 @@
                             <td><input id="val${val.tid}" class="tag-value" disabled/></td>
                             <td class="td-indicator">
                                 <button>Unassigned</button>
+                                <div class="pnl-write-data">
                                 <button class="btn-tag-write" id='WriteData' onclick="WriteData(${val.tid})">Write Data</button>
                                 <input class="tag-add-value" id="TagValue${val.tid}"/>
+                                </div>
                             </td>
                     </tr>`;
             }
