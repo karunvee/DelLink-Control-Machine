@@ -24,41 +24,61 @@
         function showTag(data){
             document.querySelector('#machineView').innerHTML = ""
             output = ""
+            output += `<tr>
+                            <th>Name</th>
+                            <th>Data type</th>
+                            <th>Tag ID</th>
+                            <th>Register</th>
+                            <th>Value</th>
+                            <th class="td-indicator">Indicator</th>
+                        </tr>`;
             for(let val of data){
                 output += `<tr>
                             <td>${val.name}</td>
                             <td>${val.dataType}</td>
                             <td>${val.tid}</td>
                             <td>${val.register}</td>
-                            <td>${val.value}</td>
-                            <td class="td-indicator"><button>Unassigned</button><button id='WriteData' onclick="WriteData(${val.tid})">Write Data</button><input type="text" id="TagValue"/></td>
+                            <td><input id="val${val.tid}" class="tag-value" disabled/></td>
+                            <td class="td-indicator">
+                                <button>Unassigned</button>
+                                <button class="btn-tag-write" id='WriteData' onclick="WriteData(${val.tid})">Write Data</button>
+                                <input class="tag-add-value" id="TagValue${val.tid}"/>
+                            </td>
                     </tr>`;
             }
             document.querySelector('#machineView').innerHTML += output;
         }
+        function updateData(data){
+            for(let val of data){
+                str = "val" + String(val.tid);
+                document.getElementById(str).value = val.value;
+            }
+        }
+
 
         fetch('http://127.0.0.1:5000/api/v1/devices')
         .then(response => response.json())
         .then(data => showData(data));
 
         let api_tag = 'http://127.0.0.1:5000/api/v1/devices/'+ String(dID) + '/tags';
-        setInterval(() => {
-            fetch(api_tag)
+        fetch(api_tag)
             .then(response => response.json())
             .then(data => showTag(data));
-        }, 2000);
-        // fetch(api_tag)
-        //     .then(response => response.json())
-        //     .then(data => showTag(data));
+        setInterval(() => {
+                fetch(api_tag)
+                .then(response => response.json())
+                .then(data => updateData(data));
+            }, 2000);
+        
 
         function WriteData(tag_id){
-            let value = document.getElementById("TagValue").value;
-            let url_api = 'http://192.168.1.254:9000/api/v1/devices/'+ String(dID) +'/tags/'+ String(tag_id) +'/value/' + String(value);
+            var tag_value = document.getElementById("TagValue"+tag_id).value;
+            let url_api = 'http://127.0.0.1:5000/api/v1/devices/'+ String(dID) +'/tags/'+ String(tag_id) +'/value/' + tag_value;
             const initDetails = {
             method: 'PUT',
             headers: {
                 'Content-Length': 0,
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290IiwianRpIjoiZDJmYTc5NzQyYTJkNDU1YjgyNGJmNzMwMDAzMjVhYmEiLCJpYXQiOjE2Njc0NTg2NzYsIm5iZiI6MTY2NzQ1ODY3NSwiZXhwIjoxNjY3NTAxODc1LCJpc3MiOiJBUEkuRElBTGluay5ERUxUQSIsImF1ZCI6IkRJQUxpbmsgQVBJIFVzZXIifQ.RyP-lWVVEVKN4WBf520B95y16J4hxllk9RDFjuQ3Vv0'
+                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290IiwianRpIjoiMTEwZTdiYmQwZjc4NDgwY2IyNzgxOGQ0NTRkMTU4MTYiLCJpYXQiOjE2Njc5NjY1MjYsIm5iZiI6MTY2Nzk2NjUyNiwiZXhwIjoxNjY4MDA5NzI2LCJpc3MiOiJBUEkuRElBTGluay5ERUxUQSIsImF1ZCI6IkRJQUxpbmsgQVBJIFVzZXIifQ.1fEilarCWfCTLecpR8IlDytsixQZf7M_HW8745ldf3c'
             },
             }
             fetch(url_api,initDetails).then( response =>
@@ -70,14 +90,14 @@
                         return;
                     }
                     else if(response.status != 204){
-                        let msg = 'MachineID :'+ dID +', Tag ID :' + tag_id + ', Status Code: ' +
+                        let msg = 'Value :' + tag_value + ', MachineID :'+ dID +', Tag ID :' + tag_id + ', Status Code: ' +
                             response.status;
 
                         console.log(msg);
                         alert(msg);
                         return;
                     }
-                    alert('Write the value success!');
+                    // alert('Write the value success!');
                     console.log( response.headers.get( "Content-Type" ) );
                     return 0;
                 }

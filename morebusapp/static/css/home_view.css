@@ -30,17 +30,30 @@
 }
 .machine-item .item-header span{
   margin-left: 10px;
+  padding: 5px 20px;
+  max-height: 37px;
   font-size: 18px;
+  color: rgb(255, 255, 255);
 }
-.machine-item .item-header .Online{
-  color: rgb(0, 168, 34);
-}
-.machine-item .item-header .Offline{
-  color: #ccc;
-}
+
 .machine-item:hover{
   box-shadow: 0 10px 15px 0 rgba(4, 152, 251, 0.2), 0 6px 20px 0 rgba(8, 55, 109, 0.19);
 }
-.machine-item p{
-  font-size: 18px;
+.ip-address{
+  position: fixed;
+  display: flex;
+  font-size: 14px;
+  right: 1rem;
+  bottom: 1rem;
+  color: #ccc;
 }
+.machine-item .item-info{
+  font-size: 18px;
+  display: flex;
+  justify-content: space-between;
+}
+.machine-item .item-info .id-display{
+  margin-top: 10px;
+  font-size: 12px;
+  opacity: 0.5;
+} 

@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'css/home_view.css' %}">
     <link rel="stylesheet" href="{% static 'css/button.css' %}">
+    <link rel="stylesheet" href="{% static 'css/display.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
     <title>Morebus</title>
 </head>
@@ -21,16 +22,20 @@
                     <div class="item-header">
                         <h5>{{val.comment}}</h5>
                         {% if val.status == 0 %}
-                        <span class="Offline"> Offline </span>
+                        <span class="display Offline"> Offline </span>
                         {% else %}
-                        <span class="Online"> Online </span>
+                        <span class="display Online"> Online </span>
                         {% endif %}
                     </div>
-                    <p>IP : {{val.ip}} &emsp;Device : {{val.name}}-ID : {{val.deviceId}} </p>
+                    <div class="item-info">
+                        <span>IP : {{val.ip}} &emsp;Device : {{val.name}}</span>
+                        <span class="id-display">ID : {{val.deviceId}}</span>
+                    </div>
                 </div>
                 {% endfor %}
             </div>
         </div>
+        <span class="ip-address">{{user_ip}}</span>
     </section>
 </body>
 </html>

@@ -15,7 +15,7 @@
     padding: 0;
 }
 .header-info span{
-    font-size: 20px;
+    font-size: 18px;
 }
 .header-info .sp-info{
     margin-left: 10px;
@@ -56,12 +56,12 @@
     border-radius: 10px;
 }
 .pnl.box-camera{
-    width: 40%;
+    width: 58%;
     height: auto;
     min-height: 580px;
 }
 .pnl.box-command-monitor{
-    width: 58%;
+    width: 40%;
     height: auto;
 }
 .pnl.box-machineView{
@@ -110,7 +110,16 @@ h5{
 .td-indicator {
     max-width: 180px;
 }
-
+.tag-value{
+    width: 80px;
+    font-weight: 10;
+    font-size: 18px;
+    border: 0;
+    background-color: transparent;
+}
+.tag-add-value{
+    width: 80px;
+}
 /* width */
 ::-webkit-scrollbar {
     width: 10px;
@@ -129,4 +138,8 @@ h5{
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
     background: #555; 
+  }
+  .ip-camera{
+    width: 100%;
+    height: 500px;
   }

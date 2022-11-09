@@ -329,3 +329,6 @@ body.dark .header .text{
     color: var(--text-color);
 }
 tr:nth-child(even){background-color: var(--table-color)}
+.tag-value{
+    color: var(--text-color);
+}

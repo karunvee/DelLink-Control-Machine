@@ -71,9 +71,13 @@
                                 <td>{{val.register}}</td>
                                 <td>{{val.value}}</td>
                                 <td class="td-indicator">
+                                <form  action="{% url 'writeData' mID val.tid %}" method="post">
+                                    <!-- <input type="button" onclick="location.href='{% url 'writeData' mID val.tid %}';"/> -->
+                                    {% csrf_token %}
                                     <button>Unassigned</button>
-                                    <input type="button" onclick="location.href='{% url 'writeData' mID val.tid %}';"/>
-                                    <input type="text" id="TagValue"/>
+                                    <button class="btn-tag-write" type="submit">writeData</button>
+                                    <input type="text" id="TagValue" name="TagValue" class="tag-add-value"/>
+                                </form>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -82,48 +86,11 @@
             </section>
         </div>
     </section>
-    <script>
+    <!-- <script>
 
         // setTimeout(function(){
         // window.location.reload(1);
         // }, 2000);
-        // window.setTimeout(function () {
-        //     location.href = "/machine_view/id{{mID}}/";
-        // }, 5000); // refresh/redirect after 5 seconds.
-
-
-        function WriteData(tag_id){
-            let value = document.getElementById("TagValue").value;
-            let url_api = 'http://192.168.1.254:9000/api/v1/devices/'+ String(dID) +'/tags/'+ String(tag_id) +'/value/' + String(value);
-            const initDetails = {
-            method: 'PUT',
-            headers: {
-                'Content-Length': 0,
-                'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290IiwianRpIjoiZDJmYTc5NzQyYTJkNDU1YjgyNGJmNzMwMDAzMjVhYmEiLCJpYXQiOjE2Njc0NTg2NzYsIm5iZiI6MTY2NzQ1ODY3NSwiZXhwIjoxNjY3NTAxODc1LCJpc3MiOiJBUEkuRElBTGluay5ERUxUQSIsImF1ZCI6IkRJQUxpbmsgQVBJIFVzZXIifQ.RyP-lWVVEVKN4WBf520B95y16J4hxllk9RDFjuQ3Vv0'
-            },
-            }
-            fetch(url_api,initDetails).then( response =>
-                {
-                    if ( response.status == 401 )
-                    {
-                        console.log('Status Code: 401 Unauthorized');
-                        alert('Status Code: 401 Unauthorized');
-                        return;
-                    }
-                    else if(response.status != 204){
-                        let msg = 'MachineID :'+ dID +', Tag ID :' + tag_id + ', Status Code: ' +
-                            response.status;
-
-                        console.log(msg);
-                        alert(msg);
-                        return;
-                    }
-                    alert('Write the value success!');
-                    console.log( response.headers.get( "Content-Type" ) );
-                    return 0;
-                }
-                )
-        }
-    </script>
+    </script> -->
 </body>
 </html>

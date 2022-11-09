@@ -22,6 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     url(r'^$', views.home_view, name='home_view'),
     url(r'^machine_view/id(?P<id>[0-9]+)/$', views.item_view, name='item_view'),
-    url(r'^machine_view/id(?P<id>[0-9]+)/writeData/tag(?P<pk>[0-9]+)/$', views.writeData, name='writeData'),
+    url(r'^machine_view/id(?P<id>[0-9]+)/writeData/tag(?P<tg>[0-9]+)/$', views.writeData, name='writeData'),
     url(r'setting/$', views.setting_view, name='setting_view'),
 ]
