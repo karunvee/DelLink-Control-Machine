@@ -9,12 +9,20 @@
     <link rel="stylesheet" href="{% static 'css/button.css' %}">
     <link rel="stylesheet" href="{% static 'css/display.css' %}">
     <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
-    <title>Morebus</title>
+    <title>DELLINK</title>
 </head>
 <body>
     {% include "menubar.html" %}
     <section class="header">
-        <div class="content"><h3>Overview</h3>
+        <div class="content">
+            <div class="header-container">
+                <h3>Overview</h3>
+                <div class="lines-container">
+                    {% for line in line_members %}
+                    <button class="btn-line">{{line.name}}</button>
+                    {% endfor %}
+                </div>
+            </div>
             <div id="mList" class="machine-items">
                 {% for val in response %}
                 <div class="machine-item {{status}}" onclick="location.href='{% url 'item_view' val.deviceId %}';">

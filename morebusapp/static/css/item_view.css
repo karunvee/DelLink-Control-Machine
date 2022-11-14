@@ -109,7 +109,7 @@ h5{
 }
 
 .tag-value{
-    width: 80px;
+    width: 90px;
     font-weight: 10;
     font-size: 18px;
     border: 0;
@@ -151,3 +151,22 @@ h5{
   .pnl-write-data{
     margin-left: 30px;
   }
+.table-container button{
+    margin: auto;
+    padding: 2px 8px;
+    background-color: rgb(32, 133, 199);
+    border: 0;
+    border-radius: 10px;
+    color: white;
+}
+.table-container button:hover{
+    background-color: rgb(118, 185, 229);
+    box-shadow: 0 2px 8px 0 rgba(65, 132, 234, 0.75);
+    cursor: pointer;
+}
+.tag-add-value{
+    text-align: center;
+}
+input:focus{
+    outline: 2px ridge rgba(0, 103, 193, 0.6);
+}

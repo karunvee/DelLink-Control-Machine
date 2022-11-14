@@ -1,5 +1,5 @@
 
-from .models import  LineInfo, Indicator
+from .models import  Indicator
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template import loader
@@ -41,7 +41,6 @@ def connectionIP(ip,port):
 
 # Create your views here.     
 def home_view(request):
-    line_members = LineInfo.objects.all()
     ip = get_client_ip(request)
 
     error_context = {'test_error' : "IP isn't connect",}
@@ -56,7 +55,6 @@ def home_view(request):
     if d_response.status_code == requests.codes.ok:
         device_data = d_response.json()
         context = {
-            'line_members': line_members,
             'user_ip': ip ,
             'response': device_data,
         }
@@ -77,7 +75,7 @@ def item_view(request, id="0"):
         ip = get_client_ip(request)
 
         id = int(id)
-        d_response = requests.get(ReturnHttpDIA(DIA_IP, DIA_PORT, 'devices'))
+        d_response = requests.get('http://' + DIA_IP + '/api/v1/devices')
 
         if d_response.status_code == requests.codes.ok:
             device_data = d_response.json()
@@ -97,7 +95,7 @@ def item_view(request, id="0"):
             }
             return render(request, 'Error/ErrorAPI.html', error_context)
 
-        url_tag = ReturnHttpDIA(DIA_IP, DIA_PORT, 'devices/' + str(id) + '/tags' )
+        url_tag = 'http://' + DIA_IP + '/api/v1/devices/' + str(id) + '/tags'
         t_response = requests.get(url_tag)
 
         if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
@@ -114,6 +112,11 @@ def item_view(request, id="0"):
                 'tag_data': tag_data,
             }
             return render(request, 'ServerHTML/_item_view.html', context)
+            # if ip == SERVER_IP:
+            #     return render(request, 'ServerHTML/_item_view.html', context)
+            # else:
+            #     return render(request, 'item_view.html', context)
+
         else:
             error_context = {
                 'test_error' : "At tag information process",
@@ -121,4 +124,22 @@ def item_view(request, id="0"):
             }
             return render(request, 'Error/ErrorAPI.html', error_context)
 
+def writeData(request, id, tg):
+    value = request.POST['TagValue']
+
+    url_writeData = "http://" + DIA_IP + "/api/v1/devices/" + str(id) + "/tags/" + str(tg) + "/value/" + str(value)
+    headers = {
+        'Content-Length': '0',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJyb290IiwianRpIjoiMDIwNDI4MjMzMWFmNDhkNThiMTMxNGUxZTk1YjI4YmIiLCJpYXQiOjE2Njc5ODQwNDEsIm5iZiI6MTY2Nzk4NDA0MCwiZXhwIjoxNjY4MDI3MjQwLCJpc3MiOiJBUEkuRElBTGluay5ERUxUQSIsImF1ZCI6IkRJQUxpbmsgQVBJIFVzZXIifQ.CyCAO2a09_U_p2Dj6vZRyX7o3XuSIduLaUU-ePjgf5U',
+        }
+    2
+    w_response = requests.put(url_writeData, headers=headers)
+
+    if w_response.status_code == requests.codes.ok or w_response.status_code == requests.codes.no_content:
+        recent_path = '/machine_view/id' + id
+        return redirect(recent_path)
+        # return redirect(reverse('item_view', kwargs={'id':id}))
+    else:
+        html = "<html><body>%s</body></html>" % w_response.status_code
+        return HttpResponse(html)
     

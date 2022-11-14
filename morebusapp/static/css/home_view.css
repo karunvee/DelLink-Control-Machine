@@ -3,11 +3,38 @@
   margin-top: 20px;
   margin-left: 140px;
 } */
+
+.header-container{
+  z-index: 2;
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  width: 77%;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.content .header-container h3{
+  margin: 10px 20px;
+}
+.lines-container{
+  margin: 10px 20px;
+}
+.lines-container button{
+    margin: auto;
+    padding: 6px 13px;
+    font-size: 20px;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
 .machine-items{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(380px, auto));
   grid-gap:50px;
-  margin: 50px auto;
+  margin-top: 80px;
+  /* margin: 50px auto; */
   max-width: 1240px;
   padding: 20px;
 }

@@ -1,6 +1,32 @@
 from django.db import models
 
 # Create your models here.
+
+class LineInfo(models.Model):
+    name = models.CharField(max_length = 255)
+    ip = models.CharField(max_length = 255)
+    post = models.CharField(max_length = 255)
+    
+    def __str__(self):
+        return self.name
+
+class Indicator(models.Model):
+    DATA_TYPE = (
+        ('BIT', 'BIT'), ('INT', 'INT'), ('FLOAT', 'FLOAT'),('ASCII', 'ASCII')
+    )
+    DISPLAY_TYPE = (
+        ('BIT', 'BIT'), ('ASCII', 'ASCII')
+    )
+    name = models.CharField(max_length = 255)
+    tag_id = models.CharField(max_length = 255)
+    register = models.CharField(max_length = 255)
+    data_type = models.CharField(max_length = 255, choices=DATA_TYPE)
+    display = models.CharField(max_length = 255, choices=DATA_TYPE)
+    asg = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.name
+
 # class Lines(models.Model):
 #     name = models.CharField(max_length = 255, null=True)
 
@@ -38,12 +64,5 @@ from django.db import models
 #     def __str__(self):
 #         return self.name
 
-class Indicator(models.Model):
-    deviceID = models.IntegerField
-    tagID = models.IntegerField
-    name = models.CharField(max_length = 255)
-    dataType = models.CharField(max_length = 255)
-    
-    def __str__(self):
-        return self.name
+
     
