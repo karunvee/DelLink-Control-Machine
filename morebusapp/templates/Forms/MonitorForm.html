@@ -11,8 +11,8 @@
 <body>
     <div id="addMoniform" class="form">
         <!-- <span onclick="document.getElementById('addMoniform').style.display='none'" class="close" title="Close Modal">&times;</span> -->
-        <form class="form-content" action="../addIndicator{{member.id}}/" method="post">
-            <div class="form-container">
+        <form class="form-container" action="../addIndicator{{member.id}}/" method="post">
+            <div class="form-content">
                 {% csrf_token %}
                 <h1>Add item : {{member.machine_name}}</h1>
                 <hr>

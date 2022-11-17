@@ -12,38 +12,14 @@
     <title>DELLINK</title>
 </head>
 <body>
-    {% include "menubar.html" %}
+    {% include "Necessary/loading_spinner.html" %}
+    {% include "Necessary/menubar.html" %}
     <section class="header">
         <div class="content">
-            <div class="header-container">
-                <h3>Overview</h3>
-                <div class="lines-container">
-                    {% for line in line_members %}
-                    <button class="btn-line">{{line.name}}</button>
-                    {% endfor %}
-                </div>
-            </div>
-            <div id="mList" class="machine-items">
-                {% for val in response %}
-                <div class="machine-item {{status}}" onclick="location.href='{% url 'item_view' val.deviceId %}';">
-                <!-- <div class="machine-item {{status}}" onclick="location.href='../machine_view/{{val.deviceId}}';"> -->
-                    <div class="item-header">
-                        <h5>{{val.comment}}</h5>
-                        {% if val.status == 0 %}
-                        <span class="display Offline"> Offline </span>
-                        {% else %}
-                        <span class="display Online"> Online </span>
-                        {% endif %}
-                    </div>
-                    <div class="item-info">
-                        <span>IP : {{val.ip}} &emsp;Device : {{val.name}}</span>
-                        <span class="id-display">ID : {{val.deviceId}}</span>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
+            {% include "line_menu.html" %}
+            <img src="{% static "img/logo_dellink.png" %}" alt=""> 
         </div>
-        <span class="ip-address">{{user_ip}}</span>
     </section>
+
 </body>
 </html>

@@ -1,19 +1,27 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/home_view.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    <title>DELLINK</title>
 </head>
 <body>
-    {% include "menubar.html" %}
-    <div style="color: red; margin-left:300px ;">
-        <h1 >This page isn't working</h1>
-        <p>HTTP response status codes : {{status_code}}</p>
-        <p>{{test_error}}</p>
-    </div>
-    
+    {% include "Necessary/loading_spinner.html" %}
+    {% include "Necessary/menubar.html" %}
+    <section class="header">
+        <div class="content">
+            <img src="{% static "img/logo_dellink.png" %}" alt=""> 
+            <div style="color: red; margin-left:0 ;">
+                <h3 >This page isn't working</h3>
+                <hr>
+                <span style="font-size: 20px; margin-right: 20px;">{{test_error}}</span><i class='bx bx-window-close bx-tada' ></i>
+            </div>
+        </div>
+    </section>
 
     <script>
         var cw = window.innerWidth;

@@ -10,42 +10,14 @@
     <title>Setting page</title>
 </head>
 <body>
+    {% include "Necessary/menubar.html" %}
+    {% include "Necessary/loading_spinner.html" %}
+    
     <section class="content-container">
         <div class="content-block">
-            <table border="1" style="border-color: white">
-                <tr>
-                    <th>Machine</th>
-                    <th>Line</th>
-                    <th>IP</th>
-                    <th>Port</th>
-                    <th>type</th>
-                    <th>Owner</th>
-                    <th>Picture path</th>
-                    <th></th>
-                  </tr>
-                {% for x in plc_members %}
-                <tr>
-                    <td>{{ x.machine_name }}</td>
-                    <td>{{ x.line_name }}</td>
-                    <td>{{ x.ip }}</td>
-                    <td>{{ x.port }}</td>
-                    <td>{{ x.plc_model }}</td>
-                    <td>{{ x.owner }}</td>
-                    <td>{{ x.pic_path }}</td>
-                    <td class="last">
-                        <a href="deletePLC/{{x.id}}" class="button delete">Delete</a>
-                        <a href="editPLC/{{x.id}}" class="button edit">Edit</a>
-                        <!-- <button class="button edit" onclick="document.getElementById('editform').style.display='block'" style="width:auto;">Edit {{x.id}}</button> -->
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-            <button class="btn-hover color-9" onclick="document.getElementById('addform').style.display='block'" style="width:auto;">Add</button>
+
         </div>
     </section>
-    
-    <!-- ADD FORM -->
-    {% include "Forms/addPLCForm.html" %}
-    {% include "menubar.html" %}
+
 </body>
 </html>

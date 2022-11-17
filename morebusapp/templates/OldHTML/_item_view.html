@@ -1,0 +1,102 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">.
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/item_view.css' %}">
+    <link rel="stylesheet" href="{% static 'css/display.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    <title>DELLINK</title>
+</head>
+<body>
+    {% include "menubar.html" %}
+    <section class="header">
+        <div class="content">
+            <div class="head-container">
+                <div class="header-info">
+                    <h3>{{mLName}}</h3>
+                    <p id="machineName"></p>
+                        <span>Device :</span>
+                        <span>{{mDName}}</span>
+                        <span class="sp-info">, Machine ID :</span>
+                        <span>{{mID}}</span>
+                        <span class="sp-info">, IP :</span> 
+                        <span>{{mIP}}</span>    
+                        <br>
+                        <span>Type :</span>  
+                        <span>{{mType}}</span>
+                        <span class="sp-info">, Model :</span> 
+                        <span>{{mModel}} </span>
+                </div>
+                <div class="header-status">
+                    {% if mStatus == 1 %}
+                    <div class="display Online"><label> Online </label></div>
+                    {% else %}
+                    <div class="display Offline"><label> Offline </label></div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <section class="body-content">
+                <div class="pnl box-camera">
+                    <h5 class="head-pnl">RTSP camera</h5>
+                    <iframe class="ip-camera" 
+                    src="https://www.youtube.com/embed/5obJXH8gU-E">
+                    </iframe>
+                </div>
+                <div class="pnl box-command-monitor">
+                    <h5 class="head-pnl">Monitor & Control</h5>
+                </div>        
+            </section>
+            <section class="body-tags">
+                <div class="pnl box-machineView">
+                    <div class="header-tags">
+                        <h5 class="head-pnl">Tag members</h5>
+                        <button class="btn-add" id="addTag">Add Tag</button>
+                    </div>
+                    <div class="table-container" id="table_parameter">
+                        <table class="table-tag" id="machineView">
+                            <tr>
+                                <th>Name</th>
+                                <th>Data type</th>
+                                <th>Tag ID</th>
+                                <th>Register</th>
+                                <th>Value</th>
+                                <th class="th-indicator">Indicator</th>
+                            </tr>
+                            {% for val in tag_data %}
+                            <tr>
+                                <td>{{val.name}}</td>
+                                <td>{{val.dataType}}</td>
+                                <td>{{val.tid}}</td>
+                                <td>{{val.register}}</td>
+                                <td>{{val.value}}</td>
+                                <td class="td-indicator">
+                                <form  action="{% url 'writeData' mID val.tid %}" method="post">
+                                    <!-- <input type="button" onclick="location.href='{% url 'writeData' mID val.tid %}';"/> -->
+                                    {% csrf_token %}
+                                    <button>Unassigned</button>
+                                    <div class="pnl-write-data">
+                                        <button class="btn-tag-write" type="submit">writeData</button>
+                                        <input type="text" id="TagValue" name="TagValue" class="tag-add-value"/>
+                                    </div>
+                                </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                    </div>
+                </div> 
+            </section>
+        </div>
+    </section>
+    <!-- <script>
+
+        // setTimeout(function(){
+        // window.location.reload(1);
+        // }, 2000);
+    </script> -->
+</body>
+</html>

@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/line_view.css' %}">
+    <title>DELLINK</title>
+</head>
+<body>
+    <div class="header-container">
+        <h3>Overview</h3>
+        <div class="lines-container">
+            {% for line in line_members %}
+            <input class="btn-line" type="button" onclick="location.href='{% url 'line_view' line.id %}'" value="{{line.name}}"/>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

@@ -3,39 +3,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">.
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/item_view.css' %}">
     <link rel="stylesheet" href="{% static 'css/display.css' %}">
-    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/form.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'img/favicon.ico' %}">
+    <title>DELLINK</title>
 </head>
 <body>
-    {% include "menubar.html" %}
+    {% include "Necessary/menubar.html" %}
+    {% include "Necessary/loading_spinner.html" %}
     <section class="header">
         <div class="content">
             <div class="head-container">
                 <div class="header-info">
-                    <h3>{{mLName}}</h3>
+                    <h3 id="machineName"></h3>
+                    <input id="deviceID" type="hidden" value="{{mID}}"></input>
+                    <input id="DIA_http" type="hidden" value="{{DIA_http}}"></input>
+                    <input id="guid" type="hidden" value="{{mGuid}}"></input>
                     <p id="machineName"></p>
                         <span>Device :</span>
-                        <span>{{mDName}}</span>
+                        <span id="machineRname"></span>
                         <span class="sp-info">, Machine ID :</span>
-                        <span>{{mID}}</span>
+                        <span id="machineID"></span>
                         <span class="sp-info">, IP :</span> 
-                        <span>{{mIP}}</span>    
-                        <br>
+                        <span id="machineIP"></span>
+                        <!-- <br> -->
                         <span>Type :</span>  
-                        <span>{{mType}}</span>
+                        <span id="type"></span>
                         <span class="sp-info">, Model :</span> 
-                        <span>{{mModel}} </span>
+                        <span id="model"></span>
                 </div>
                 <div class="header-status">
-                    {% if mStatus == 1 %}
-                    <div class="display Online"><label> Online </label></div>
-                    {% else %}
-                    <div class="display Offline"><label> Offline </label></div>
-                    {% endif %}
+                    <div id="status" class="status">
+                    </div>
                 </div>
             </div>
             
@@ -43,20 +45,46 @@
                 <div class="pnl box-camera">
                     <h5 class="head-pnl">RTSP camera</h5>
                     <iframe class="ip-camera" 
-                    src="https://www.youtube.com/embed/5obJXH8gU-E">
-                    </iframe>
+                    src="https://www.youtube.com/embed/pZw9veQ76fo?autoplay=1">
                 </div>
                 <div class="pnl box-command-monitor">
                     <h5 class="head-pnl">Monitor & Control</h5>
+                    <div class="cmd-container">
+                        <!-- Button generator -->
+                        <div class="cmd-btn">
+                            {% for tag in indicator_list %}
+                            <input id="assTag{{tag.tag_id}}" style="display: none;"/>
+                                {% if tag.data_type == "BIT" %}
+                                    <input id="bTagValue{{tag.tag_id}}" hidden/>
+                                    <button id="btn-TagValue" class="btn-TagValue" onclick="WriteData({{tag.tag_id}}, 2)">{{tag.name}}</button>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        <hr>
+                        <!-- Text generator -->
+                        <div class="cmd-text">
+                            {% for tag in indicator_list %}
+                            <input id="assTag{{tag.tag_id}}" style="display: none;"/>
+                                {% if tag.data_type != "BIT" %}
+                                    <label>{{tag.name}}</label>
+                                    <div class="cmd-text-send">
+                                        <input type="text" id="mTagValue{{tag.tag_id}}"/><button onclick="WriteData({{tag.tag_id}}, 1)">Send</button>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
                 </div>        
             </section>
             <section class="body-tags">
                 <div class="pnl box-machineView">
                     <div class="header-tags">
                         <h5 class="head-pnl">Tag members</h5>
-                        <button class="btn-add" id="addTag">Add Tag</button>
+                        <input class="btn-add" type="button" onclick="window.open('http://www.yahoo.com', '_blank')" value="Add Tag" />
+                        <button class="btn-add" id="addTag" onclick="openDIAform()">Add Tag</button>
                     </div>
-                    <div class="table-container" id="table_parameter">
+                    <div class="table-container">
                         <table class="table-tag" id="machineView">
                             <tr>
                                 <th>Name</th>
@@ -64,38 +92,80 @@
                                 <th>Tag ID</th>
                                 <th>Register</th>
                                 <th>Value</th>
-                                <th class="th-indicator">Indicator</th>
+                                <th class="td-indicator">Indicator</th>
                             </tr>
-                            {% for val in tag_data %}
-                            <tr>
-                                <td>{{val.name}}</td>
-                                <td>{{val.dataType}}</td>
-                                <td>{{val.tid}}</td>
-                                <td>{{val.register}}</td>
-                                <td>{{val.value}}</td>
-                                <td class="td-indicator">
-                                <form  action="{% url 'writeData' mID val.tid %}" method="post">
-                                    <!-- <input type="button" onclick="location.href='{% url 'writeData' mID val.tid %}';"/> -->
-                                    {% csrf_token %}
-                                    <button>Unassigned</button>
-                                    <div class="pnl-write-data">
-                                        <button class="btn-tag-write" type="submit">writeData</button>
-                                        <input type="text" id="TagValue" name="TagValue" class="tag-add-value"/>
-                                    </div>
-                                </form>
-                                </td>
-                            </tr>
-                            {% endfor %}
                     </div>
                 </div> 
             </section>
         </div>
     </section>
-    <!-- <script>
 
-        // setTimeout(function(){
-        // window.location.reload(1);
-        // }, 2000);
-    </script> -->
+    <!-- Indicator assignment form -->
+    <div id="assignForm" class="form">
+        <form class="form-container" action="/machine_view/ln{{lineID}}id{{mID}}/" method="post">
+            <div class="form-content">
+                {% csrf_token %}
+                <h2>Indicator assignment</h2>
+                <strong>information</strong><br>
+                <div class="form-info">
+                    <label>Tag name : </label><input type="text" id="tagName" name="tagName" />
+                    <label>Tag ID : </label><input type="text" id="tagID" name="tagID" />
+                    <label>Register : </label><input type="text" id="register" name="register" />
+                    <hr>
+                </div>
+                <strong>Data type</strong>
+                <select id="data_type" name="data_type" onchange="getDataType()">
+                    <option value="">-</option>
+                    <option value="BIT">BIT</option>
+                    <option value="INT">INT</option>
+                    <option value="FLOAT">FLOAT</option>
+                    <option value="ASCII">ASCII</option>
+                </select>
+                <div id="datatype_bit" style="display: none;">
+                    <strong>Display type</strong>
+                    <select id="display_type" name="display_type">
+                        <option>BUTTON</option>
+                        <option>INDICATOR</option>
+                    </select>
+                    <strong>button's color</strong>
+                    <select id="btn_color" name="btn_color">
+                        <option>Blue</option>
+                        <option>Yellow</option>
+                        <option>Red</option>
+                    </select>
+                </div>
+                <div id="datatype_text" style="display: none;">
+                    <strong>Display type</strong>
+                    <select id="display_type" name="display_type">
+                        <option>TEXT</option>
+                        <option>NUMBER</option>
+                    </select>
+                </div>
+                <input type="checkbox" id="writable" name="writable" value="" style="cursor: pointer;">
+                <label for="writable" style="cursor: pointer;">Writeable</label>
+                <hr>
+                <div class="clearfix">
+                    <button id="btn-add" class="add" type="submit" style="display: none;">Add</button>
+                    <button class="cancel" type="button" onclick="document.getElementById('assignForm').style.display='none'">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Delete Tag Confirmable windows -->
+    <div id="confirmForm" class="confirmForm">
+        <form class="confirmForm-container">
+            <div class="confirmForm-content">
+                <h1>Question ?</h1>
+                <p>Are you sure you want to delete the indicator ?</p>
+                <div class="clearfix">
+                    <button class="btn-delete no" type="button" onclick="document.getElementById('confirmForm').style.display='none'">No</button>
+                    <button class="btn-delete yes">Yes, I'm sure</button>
+                </div>
+            </div>
+            </form>
+    </div>
+
+    <script src="{% static "js/_item_view.js" %}" ></script>
 </body>
 </html>

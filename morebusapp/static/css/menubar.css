@@ -338,10 +338,10 @@ tr:nth-child(even){background-color: var(--table-color)}
     color: var(--header-color);
     background-color: var(--primary-color);
 }
-.lines-container button{
+.lines-container input{
     color: var(--text-color);
     background-color: var(--sidebar-color);
 }
-.lines-container button:hover{
+.lines-container input:hover{
     border: 2px solid var(--linebtn-color);
   }

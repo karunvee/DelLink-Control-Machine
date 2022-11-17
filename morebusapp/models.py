@@ -5,7 +5,7 @@ from django.db import models
 class LineInfo(models.Model):
     name = models.CharField(max_length = 255)
     ip = models.CharField(max_length = 255)
-    post = models.CharField(max_length = 255)
+    port = models.CharField(max_length = 255)
     
     def __str__(self):
         return self.name
@@ -15,13 +15,16 @@ class Indicator(models.Model):
         ('BIT', 'BIT'), ('INT', 'INT'), ('FLOAT', 'FLOAT'),('ASCII', 'ASCII')
     )
     DISPLAY_TYPE = (
-        ('BIT', 'BIT'), ('ASCII', 'ASCII')
+        ('BUTTON', 'BUTTON'), ('INDICATOR', 'INDICATOR'), ('TEXT', 'TEXT'), ('NUMBER','NUMBER')
     )
+    machineID = models.CharField(max_length = 255)
+    # line = models.ManyToManyField(LineInfo)
+    lineID = models.CharField(max_length = 255)
     name = models.CharField(max_length = 255)
     tag_id = models.CharField(max_length = 255)
     register = models.CharField(max_length = 255)
     data_type = models.CharField(max_length = 255, choices=DATA_TYPE)
-    display = models.CharField(max_length = 255, choices=DATA_TYPE)
+    display = models.CharField(max_length = 255, choices=DISPLAY_TYPE)
     asg = models.BooleanField(default=False)
 
     def __str__(self):
