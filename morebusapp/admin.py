@@ -1,6 +1,10 @@
 from django.apps import apps
 from django.contrib import admin
 from .models import *
+from members.models import UserProfile
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin as AuthUserAdmin
+
 # Register your models here.
 
 
@@ -27,3 +31,13 @@ admin.site.register(LineInfo, LineInfoAdmin)
 class IndicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'lineID', 'machineID', 'tag_id', 'register', 'data_type', 'display', 'asg')
 admin.site.register(Indicator, IndicatorAdmin)
+
+class UserProfileInLine(admin.StackedInline):
+    model = UserProfile
+    can_delete: False
+
+class AccountsUserAdmin(AuthUserAdmin):
+    inlines = [UserProfileInLine]
+
+admin.site.unregister(User)
+admin.site.register(User, AccountsUserAdmin)

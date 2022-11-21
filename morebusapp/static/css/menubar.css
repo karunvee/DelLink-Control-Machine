@@ -19,6 +19,7 @@
     --header-color: #ffffff;
     --table-color: #f2f2f2;
     --linebtn-color: rgb(53, 178, 245);
+    --header-text: #005992;
     /* ====== Transition ====== */
     --tran-03: all 0.2s ease;
     --tran-03: all 0.3s ease;
@@ -48,6 +49,7 @@ body.dark{
     --header-color: #ccc;
     --table-color: #3b3b3b;
     --linebtn-color: rgb(255, 210, 86);
+    --header-text: #0297f4;
 }
 
 /* ===== Sidebar ===== */
@@ -345,3 +347,9 @@ tr:nth-child(even){background-color: var(--table-color)}
 .lines-container input:hover{
     border: 2px solid var(--linebtn-color);
   }
+.head-container{
+    background-color: var(--sidebar-color);
+  }
+.header-info{
+    color: var(--header-text);
+}

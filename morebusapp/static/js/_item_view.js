@@ -71,7 +71,7 @@
                 var btn_tag = document.getElementById("bTagValue" + String(val.tid));
                 if(btn_tag != null){
                     document.getElementById("bTagValue"+String(val.tid)).value = val.value;
-                    const btn = document.querySelector('#btn-TagValue');
+                    const btn = document.querySelector('#btn-TagValue'+String(val.tid));
                     if(val.value == 1){
                         btn.classList.remove("OFF");
                         btn.classList.add("ON");
@@ -151,12 +151,15 @@
             .then(data => showTag(data));
 
         setInterval(() => {
-                fetch(api_tag).then(response => response.json()).then(data => updateTag(data));
                 fetch(String(dia_ip) + '/api/v1/devices').then(response => response.json()).then(data => updateInfo(data));
             }, 2000);
+        setInterval(() => {
+                fetch(api_tag).then(response => response.json()).then(data => updateTag(data));
+            }, 500);
         
 
         function WriteData(tag_id, tg = 0){
+            $("body").css("cursor", "progress");
             console.log("token :" + token_);
             if (token_ == ""){
                 alert("Authorization error : Token is empty!!");
@@ -203,7 +206,7 @@
                     }
                     )
             }
-            
+            $("body").css("cursor", "default");
         }
         function openForm(tid) {
             // document.getElementById('tagName').innerText = document.getElementById("name" + tid).value;

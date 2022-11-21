@@ -43,6 +43,7 @@
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
   border-radius: 20px;
   cursor: pointer;
+  transition: 1s ease;
 }
 .machine-item .item-header{
   display: flex;
@@ -64,6 +65,10 @@
 }
 
 .machine-item:hover{
+  -webkit-transform: scale(0.95);
+  -ms-transform: scale(0.95);
+  transform: scale(0.95);
+  transition: 1s ease;
   box-shadow: 0 10px 15px 0 rgba(4, 152, 251, 0.2), 0 6px 20px 0 rgba(8, 55, 109, 0.19);
 }
 .ip-address{
@@ -84,3 +89,4 @@
   font-size: 12px;
   opacity: 0.5;
 } 
+
