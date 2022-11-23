@@ -29,25 +29,26 @@
                     <input id="deviceID" type="hidden" value="{{mID}}"></input>
                     <input id="DIA_http" type="hidden" value="{{DIA_http}}"></input>
                     <input id="guid" type="hidden" value="{{mGuid}}"></input>
+                    <input id="lineID" type="hidden" value="{{lineID}}"></input>
 
                         <div class="box-info">
                             <span >Device :</span>
                             <span id="machineRname"></span>
                         </div>
                         <div class="box-info">
-                            <span class="sp-info">Machine ID :</span>
+                            <span class="sp-info">Machine ID : </span>
                             <span id="machineID"></span>
                         </div>
                         <div class="box-info">
-                            <span class="sp-info">IP :</span> 
+                            <span class="sp-info">IP : </span> 
                             <span id="machineIP"></span>
                         </div>
                         <div class="box-info">
-                            <span>Type :</span>  
+                            <span>Type : </span>  
                             <span id="type"></span>
                         </div>
                         <div class="box-info">
-                            <span class="sp-info">Model :</span> 
+                            <span class="sp-info">Model : </span> 
                             <span id="model"></span>
                         </div>
                 </div>
@@ -62,7 +63,7 @@
                     <div style="background-color: black; width: 100%; height: 500px; text-align: center;"><p style="display: inline-block; vertical-align: middle;">Real-Time Camera</p></div>
                 </div>
                 <div class="pnl box-command-monitor">
-                    <h5 class="head-pnl">Monitor & Control</h5>
+                    <h5 class="head-pnl">Monitor & Controller</h5>
                     <div class="cmd-container">
                         <!-- Button generator -->
                         <div class="cmd-btn">
@@ -70,7 +71,7 @@
                             <input id="assTag{{tag.tag_id}}" style="display: none;"/>
                                 {% if tag.data_type == "BIT" %}
                                     <input id="bTagValue{{tag.tag_id}}" hidden/>
-                                    <button id="btn-TagValue{{tag.tag_id}}" class="btn-TagValue" onclick="WriteData({{tag.tag_id}}, 2)">{{tag.name}}</button>
+                                    <button id="btn-TagValue{{tag.tag_id}}" class="btn-TagValue" style="--btn-color: {{tag.color}};" onclick="WriteData({{tag.tag_id}}, 2)">{{tag.name}}</button>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -95,12 +96,13 @@
                 <div class="pnl box-machineView">
                     <div class="header-tags">
                         <h5 class="head-pnl">Tag members</h5>
-                        <input class="btn-add" type="button" onclick="window.open('http://www.yahoo.com', '_blank')" value="Add Tag" />
+                        <!-- <input class="btn-add" type="button" onclick="window.open('http://www.yahoo.com', '_blank')" value="Add Tag" /> -->
                         <button class="btn-add" id="addTag" onclick="openDIAform()">Add Tag</button>
                     </div>
                     <div class="table-container">
                         <table class="table-tag" id="machineView">
                             <tr>
+                                <th>No.</th>
                                 <th>Name</th>
                                 <th>Data type</th>
                                 <th>Tag ID</th>
@@ -138,33 +140,33 @@
                 <div id="datatype_bit" style="display: none;">
                     <strong>Display type</strong>
                     <select id="display_type" name="display_type">
-                        <option>BUTTON</option>
-                        <option>INDICATOR</option>
+                        <option value="BUTTON">BUTTON</option>
+                        <option value="INDICATOR">INDICATOR</option>
                     </select>
-                    <strong>Button's color</strong>
+                    <strong>Color</strong>
                         <div>
-                            <input type="radio" id="c1" name="btn_color" value="#3282B8" />
-                            <input type="color" id="btn_color1" name="btn_color" value="#3282B8" disabled/>
+                            <input type="radio" id="c1" name="color" value="#3282B8" checked/>
+                            <input type="color" id="btn_color1" name="color" value="#3282B8" disabled/>
                             <label for="c1">Blue</label>
                             <br>
-                            <input type="radio" id="c2" name="btn_color" value="#50a920" />
-                            <input type="color" id="btn_color2" name="btn_color" value="#50a920" disabled/>
+                            <input type="radio" id="c2" name="color" value="#50a920" />
+                            <input type="color" id="btn_color2" name="color" value="#50a920" disabled/>
                             <label for="c2">Green</label>
                             <br>
-                            <input type="radio" id="c3" name="btn_color" value="#e52d24" />
-                            <input type="color" id="btn_color3" name="btn_color" value="#e52d24" disabled/>
-                            <label for="c3">Red</label>
+                            <input type="radio" id="c3" name="color" value="#f9d922" />
+                            <input type="color" id="btn_color3" name="color" value="#f9d922" disabled/>
+                            <label for="c3">Yellow</label>
                             <br>
-                            <input type="radio" id="c4" name="btn_color" value="#3282B8" />
-                            <input type="color" id="btn_color4" name="btn_color"/>
-                            <label for="c4">Custom</label>
+                            <input type="radio" id="c4" name="color" value="#e52d24" />
+                            <input type="color" id="btn_color4" name="color" value="#e52d24" disabled/>
+                            <label for="c4">Red</label>
                           </div>
                 </div>
                 <div id="datatype_text" style="display: none;">
                     <strong>Display type</strong>
                     <select id="display_type" name="display_type">
-                        <option>TEXT</option>
-                        <option>NUMBER</option>
+                        <option value="TEXT">TEXT</option>
+                        <option value="NUMBER">NUMBER</option>
                     </select>
                 </div>
                 <!-- <input type="checkbox" id="writable" name="writable" value="" style="cursor: pointer;">
@@ -180,7 +182,7 @@
 
     <!-- Delete Tag Confirmable windows -->
     <div id="confirmForm" class="confirmForm">
-        <form class="confirmForm-container">
+        <!-- <form class="confirmForm-container">
             <div class="confirmForm-content">
                 <h1>Question ?</h1>
                 <p>Are you sure you want to delete the indicator ?</p>
@@ -189,7 +191,7 @@
                     <button class="btn-delete yes">Yes, I'm sure</button>
                 </div>
             </div>
-            </form>
+        </form> -->
     </div>
 
     <script src="{% static "js/_item_view.js" %}" ></script>

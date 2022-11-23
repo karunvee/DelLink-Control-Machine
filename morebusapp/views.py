@@ -97,7 +97,8 @@ def item_view(request, ln ,id="0"):
             register = request.POST['register']
             data_type = request.POST['data_type']
             display = request.POST['display_type']
-            indicator_member = Indicator(machineID = machineID, lineID = lineID, name = name, tag_id = tag_id, register = register, data_type = data_type, display = display)
+            color = request.POST['color']
+            indicator_member = Indicator(machineID = machineID, lineID = lineID, name = name, tag_id = tag_id, register = register, data_type = data_type, display = display, color = color)
             indicator_member.save()
             return redirect('/machine_view/ln' + ln + 'id' +id +'/')
 
@@ -153,3 +154,8 @@ def item_view(request, ln ,id="0"):
                 'status_code' : t_response.status_code,
             }
             return render(request, 'Error/ErrorAPI.html', error_context)
+
+def delete_indicator(request, ln ,id="0", tid="0"):
+    indicator = Indicator.objects.get(tag_id = tid)
+    indicator.delete()
+    return redirect('/machine_view/ln' + ln + 'id' +id +'/')

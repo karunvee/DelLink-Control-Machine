@@ -2,8 +2,7 @@
         var dia_ip = document.getElementById("DIA_http").value;
         var dID = document.getElementById("deviceID").value;
         var guid = document.getElementById("guid").value;
-
-        console.log(String(dia_ip))
+        var lineID = document.getElementById("lineID").value;
 
        function loginGetToken(data){
             token_ = data.access_token ;
@@ -33,8 +32,10 @@
         }
         function showTag(data){
             document.querySelector('#machineView').innerHTML = ""
-            output = ""
+            index = 0;
+            output = "";
             output += `<tr>
+                             <th>No.</th>
                             <th>Name</th>
                             <th>Data type</th>
                             <th>Tag ID</th>
@@ -43,7 +44,9 @@
                             <th class="th-indicator">Indicator</th>
                         </tr>`;
             for(let val of data){
+                index += 1;
                 output += `<tr>
+                            <td>${index}</td>
                             <td>${val.name}<input id="name${val.tid}" value="${val.name}" hidden/></td>
                             <td>${val.dataType}</td>
                             <td>${val.tid}</td>
@@ -231,10 +234,18 @@
         function deleteForm(tid){
             // Appearance Comfirm Form
             document.getElementById('confirmForm').style.display = "block";
-            // location.href ='http://127.0.0.1:8000/';
+            document.querySelector('#confirmForm').innerHTML = 
+            `<div class="confirmForm-container">
+            <div class="confirmForm-content">
+                <h1>Question ?</h1>
+                <p>Are you sure you want to delete this indicator id :${tid}, line :${lineID}, DeviceID :${dID}?</p>
+                <div class="clearfix">
+                    <button class="btn-delete no" type="button" onclick="document.getElementById('confirmForm').style.display='none'">No</button>
+                    <button class="btn-delete yes" onclick="location.href='/delete_indicator/ln${lineID}id${dID}tag_id${tid}/';">Yes, I'm sure</button>
+                </div>
+            </div>
+            </div>`;
         }
-
-
         const getDataType = () =>{
             let inputValue = document.getElementById("data_type").value; 
             if(inputValue == "BIT"){
@@ -248,6 +259,11 @@
                 document.getElementById('datatype_text').style.display = "none";
                 document.getElementById('btn-add').style.display = "none";
             }
+            else if(inputValue == "FLOAT"){
+                document.getElementById('datatype_bit').style.display = "none";
+                document.getElementById('datatype_text').style.display = "block";
+                document.getElementById('btn-add').style.display = "block";
+            }
             else{
                 document.getElementById('datatype_bit').style.display = "none";
                 document.getElementById('datatype_text').style.display = "block";
@@ -260,3 +276,4 @@
         function openDIAform(){
             window.open(url_dia,"", "width=1200,height=750");
         }
+        

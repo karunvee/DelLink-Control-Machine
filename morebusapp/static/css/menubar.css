@@ -353,3 +353,6 @@ tr:nth-child(even){background-color: var(--table-color)}
 .header-info{
     color: var(--header-text);
 }
+.box-info{
+    background-color: var(--primary-color-light);
+}

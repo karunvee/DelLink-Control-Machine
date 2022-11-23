@@ -7,4 +7,5 @@ urlpatterns = [
     url(r'^line_view/ln(?P<ln>[0-9]+)/$', views.line_view, name='line_view'),
     url(r'^machine_view/ln(?P<ln>[0-9]+)id(?P<id>[0-9]+)/$', views.item_view, name='item_view'),
     url(r'setting/$', views.setting_view, name='setting_view'),
+    url(r'delete_indicator/ln(?P<ln>[0-9]+)id(?P<id>[0-9]+)tag_id(?P<tid>[0-9]+)/$', views.delete_indicator, name='delete_indicator'),
 ]

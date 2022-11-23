@@ -25,6 +25,7 @@ class Indicator(models.Model):
     register = models.CharField(max_length = 255)
     data_type = models.CharField(max_length = 255, choices=DATA_TYPE)
     display = models.CharField(max_length = 255, choices=DISPLAY_TYPE)
+    color = models.CharField(max_length = 255,blank=True)
     asg = models.BooleanField(default=False)
 
     def __str__(self):
