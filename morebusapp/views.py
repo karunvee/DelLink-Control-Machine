@@ -1,7 +1,7 @@
 
 from .models import  LineInfo, Indicator
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
 from django.template import loader
 from django.urls import reverse
 from pymodbus.client.sync import ModbusTcpClient
@@ -11,6 +11,9 @@ import requests
 import socket
 import urllib.request
 import datetime
+import cv2
+from django.views.decorators import gzip
+import threading
 
 # DIA_IP = '10.195.220.7'
 # DIA_PORT = '9000'
@@ -159,3 +162,36 @@ def delete_indicator(request, ln ,id="0", tid="0"):
     indicator = Indicator.objects.get(tag_id = tid)
     indicator.delete()
     return redirect('/machine_view/ln' + ln + 'id' +id +'/')
+
+@gzip.gzip_page
+def remote_view(request):
+    try:
+        cam = VideoCamera()
+        return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
+    except:
+        pass
+    return render(request, 'remote_view.html')
+#to capture video class
+class VideoCamera(object):
+    def __init__(self):
+        self.video = cv2.VideoCapture("rtsp://admin:@Admin12345@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0")
+        (self.grabbed, self.frame) = self.video.read()
+        threading.Thread(target=self.update, args=()).start()
+
+    def __del__(self):
+        self.video.release()
+
+    def get_frame(self):
+        image = self.frame
+        _, jpeg = cv2.imencode('.jpg', image)
+        return jpeg.tobytes()
+
+    def update(self):
+        while True:
+            (self.grabbed, self.frame) = self.video.read()
+
+def gen(camera):
+    while True:
+        frame = camera.get_frame()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
