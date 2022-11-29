@@ -17,9 +17,12 @@
     {% include "Necessary/menubar.html" %}
     <section class="header">
         <div class="content">
+            {% for status in status_members %}
+            <input id="statusTag{{status.machineID}}" type="hidden" value="{{status.tag_id}}"></input>
+            {% endfor %}
             {% include "line_menu.html" %}
             <div id="mList" class="machine-items">
-                
+                <input id="httpLine" type="hidden" value="{{httpLine}}"></input>
                 {% if user.is_authenticated %}
                     {% for val in response %}
                     <div class="machine-item {{status}}" onclick="location.href='{% url 'item_view' line_id val.deviceId %}';">
@@ -33,8 +36,13 @@
                             {% endif %}
                         </div>
                         <div class="item-info">
-                            <span>IP : {{val.ip}} &emsp;Device : {{val.name}}</span>
-                            <span class="id-display">ID : {{val.deviceId}}</span>
+                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
+                            <div class="container-status">
+                                <input id="indicator-status{{val.deviceId}}" type="hidden"/>
+                                <div id="status-green{{val.deviceId}}" class="indicator-status"></div>
+                                <div id="status-yellow{{val.deviceId}}" class="indicator-status"></div>
+                                <div id="status-red{{val.deviceId}}" class="indicator-status"></div>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -51,8 +59,13 @@
                             {% endif %}
                         </div>
                         <div class="item-info">
-                            <span>IP : {{val.ip}} &emsp;Device : {{val.name}}</span>
-                            <span class="id-display">ID : {{val.deviceId}}</span>
+                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
+                            <div class="container-status">
+                                <input id="indicator-status{{val.deviceId}}" type="hidden"/>
+                                <div id="status-green{{val.deviceId}}" class="indicator-status"></div>
+                                <div id="status-yellow{{val.deviceId}}" class="indicator-status"></div>
+                                <div id="status-red{{val.deviceId}}" class="indicator-status"></div>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -62,5 +75,90 @@
         <span class="ip-address">{{user_ip}}</span>
     </section>
     <script src="{% static "js/loading_spinner.js" %}" ></script>
+    <script>
+        let p_val = "";
+        var httpLine = document.getElementById("httpLine").value;
+            
+        function updateTag(data, dID){
+            for(let val of data){
+                var statusTag = document.getElementById("statusTag" + String(dID));
+                if(statusTag != null && val.tid == statusTag.value){
+                        document.getElementById("indicator-status"+String(dID)).value = val.value;
+                        const sg = document.querySelector('#status-green' + String(dID));
+                        const sy = document.querySelector('#status-yellow'+ String(dID));
+                        const sr = document.querySelector('#status-red'+ String(dID));
+                            switch (val.value){
+                                case "0":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sg.classList.add("green");
+                                    break;
+                                case "1":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sr.classList.add("red");
+                                    break;
+                                case "2":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                case "3":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                case "4":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                case "5":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                case "6":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                case "7":
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    sy.classList.add("yellow");
+                                    break;
+                                default:
+                                    sg.classList.remove("green");
+                                    sy.classList.remove("yellow");
+                                    sr.classList.remove("red");
+                                    break;
+                            }
+                        break;
+                }
+
+            }  
+        }
+
+    </script>
+    
+    <script>
+    setInterval(() => {
+        {% for status in status_members %}
+        setTimeout(() => {  fetch(String(httpLine) + '/api/v1/devices/'+ {{status.machineID}} + '/tags/' + {{status.tag_id}})
+        .then(response => response.json()).then(data => updateTag(data, {{status.machineID}}));
+         }, 50);
+        {% endfor %}
+    }, 100);
+    </script>
+    
 </body>
 </html>

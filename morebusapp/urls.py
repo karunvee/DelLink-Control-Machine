@@ -11,8 +11,8 @@ urlpatterns = [
     # url(r'delete_indicator/ln(?P<ln>[0-9]+)id(?P<id>[0-9]+)tag_id(?P<tid>[0-9]+)/$', views.delete_indicator, name='delete_indicator'),
     path('', views.home_view, name='home_view'),
     path('line_view/ln<int:ln>/', views.line_view, name='line_view'),
-    path('machine_view/ln<int:ln>id<int:id>/', views.item_view, name='item_view'),
+    path('machine_view/ln<str:ln>id<str:id>/', views.item_view, name='item_view'),
     path('setting/', views.setting_view, name='setting_view'),
-    path('remote/', views.remote_view, name='remote_view'),
-    path('delete_indicator/ln<int:ln>id<int:id>tag_id<int:tid>/', views.delete_indicator, name='delete_indicator'),
+    path('camera_view/', views.camera_view, name='camera_view'),
+    path('delete_indicator/ln<str:ln>id<str:id>tag_id<str:tid>/', views.delete_indicator, name='delete_indicator'),
 ]

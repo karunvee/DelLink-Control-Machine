@@ -4,13 +4,10 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
 from django.template import loader
 from django.urls import reverse
-from pymodbus.client.sync import ModbusTcpClient
-from pymodbus.bit_read_message import ReadCoilsResponse, ReadCoilsRequest
-import json
+# from pymodbus.client.sync import ModbusTcpClient
+# from pymodbus.bit_read_message import ReadCoilsResponse, ReadCoilsRequest
 import requests
-import socket
 import urllib.request
-import datetime
 import cv2
 from django.views.decorators import gzip
 import threading
@@ -52,6 +49,7 @@ def line_view(request, ln):
     ip = get_client_ip(request)
     line_members = LineInfo.objects.all()
     line_ = LineInfo.objects.get(id = ln)
+    status_members = Indicator.objects.filter(data_type__exact = 'STATUS')
 
     httpurl = 'http://' + line_.ip + ':'+ line_.port
     error_context = {'test_error' : httpurl + " didn’t send any data, please check the IP or port and try again.",}
@@ -64,7 +62,10 @@ def line_view(request, ln):
     d_response = requests.get( ReturnHttpDIA(line_.ip, line_.port, 'devices') )
     if d_response.status_code == requests.codes.ok:
         device_data = d_response.json()
+
         context = {
+            'status_members': status_members,
+            'httpLine': httpurl,
             'line_id' : ln,
             'line_members': line_members,
             'user_ip': ip ,
@@ -91,7 +92,8 @@ def item_view(request, ln ,id="0"):
 
         #Tag Indicator
         indicator_list = Indicator.objects.filter(machineID__exact = id, lineID__exact = str(ln))
-
+        status_member = Indicator.objects.filter(machineID__exact = id, lineID__exact = str(ln), data_type__exact = 'STATUS')
+        
         if request.method == 'POST':
             machineID = id
             lineID = ln
@@ -135,6 +137,7 @@ def item_view(request, ln ,id="0"):
         if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
             tag_data = t_response.json()
             context = {
+                'status_member' : status_member,
                 'indicator_list' : indicator_list,
                 'displayType_list' : displayType_list,
                 'DIA_http': DIA_http,
@@ -164,17 +167,18 @@ def delete_indicator(request, ln ,id="0", tid="0"):
     return redirect('/machine_view/ln' + ln + 'id' +id +'/')
 
 @gzip.gzip_page
-def remote_view(request):
+def camera_view(request, id):
     try:
-        cam = VideoCamera()
+        rtsp = "rtsp://admin:@Admin12345@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0"
+        cam = VideoCamera(rtsp)
         return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
     except:
         pass
-    return render(request, 'remote_view.html')
+    return render(request, 'camera_view.html')
 #to capture video class
 class VideoCamera(object):
-    def __init__(self):
-        self.video = cv2.VideoCapture("rtsp://admin:@Admin12345@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0")
+    def __init__(self, rtsp):
+        self.video = cv2.VideoCapture(rtsp)
         (self.grabbed, self.frame) = self.video.read()
         threading.Thread(target=self.update, args=()).start()
 

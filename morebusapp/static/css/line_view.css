@@ -84,9 +84,46 @@
   display: flex;
   justify-content: space-between;
 }
-.machine-item .item-info .id-display{
-  margin-top: 10px;
-  font-size: 12px;
-  opacity: 0.5;
-} 
+
+
+.container-status{
+  display: flex;
+  justify-content: space-between;
+}
+.indicator-status{
+  margin: auto 3px 3px 3px;
+  width: 27px;
+  height: 10px;
+  background-color: #ccc;
+  border-radius: 20px;
+}
+.indicator-status.green{
+  --status-color : green;
+  background-color: var(--status-color);
+  animation: indicator_animation 1300ms infinite;
+}
+.indicator-status.yellow{
+  --status-color : rgb(227, 199, 73);
+  background-color: var(--status-color);
+  animation: indicator_animation 1300ms infinite;
+}
+.indicator-status.red{
+  --status-color : red;
+  background-color: var(--status-color);
+  animation: indicator_animation 1300ms infinite;
+}
+@keyframes indicator_animation {
+  0% {
+  filter: contrast(1);
+  box-shadow: 0 0 5px var(--status-color);
+  }
+  50% {
+  filter: contrast(1.5);
+    box-shadow: 0 0 15px var(--status-color);
+  }
+  100% {
+  filter: contrast(1);
+  box-shadow: 0 0 5px var(--status-color);
+  }
+}
 

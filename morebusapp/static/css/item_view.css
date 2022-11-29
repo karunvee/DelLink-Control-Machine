@@ -288,3 +288,101 @@ h5{
 input:focus{
     outline: 2px ridge rgba(0, 103, 193, 0.6);
 }
+.container-status{
+    margin-bottom:  8px;
+    display: flex;
+    justify-content: space-between;
+}
+.text-status{
+    display: flex;
+    margin: auto;
+    align-items: center;
+    text-align: center;
+}
+.cmd-container span{
+    display: flex;
+    margin: auto;
+    font-size: 18px;
+}
+.indicator-status{
+    margin: auto;
+    width: 30%;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 20px;
+}
+.indicator-status.green{
+    --status-color : green;
+    background-color: var(--status-color);
+    animation: indicator_animation 1300ms infinite;
+}
+.indicator-status.yellow{
+    --status-color : rgb(227, 199, 73);
+    background-color: var(--status-color);
+    animation: indicator_animation 1300ms infinite;
+}
+.indicator-status.red{
+    --status-color : red;
+    background-color: var(--status-color);
+    animation: indicator_animation 1300ms infinite;
+}
+@keyframes indicator_animation {
+    0% {
+    filter: contrast(1);
+    box-shadow: 0 0 5px var(--status-color);
+    }
+    50% {
+    filter: contrast(1.5);
+      box-shadow: 0 0 15px var(--status-color);
+    }
+    100% {
+    filter: contrast(1);
+    box-shadow: 0 0 5px var(--status-color);
+    }
+  }
+  .text-error-code{
+    display: flex;
+    margin-bottom: 15px;
+    background-color: rgb(255, 233, 233);
+    border-radius: 10px;
+  }
+  .text-error-code input{
+    text-align: center;
+    border: 0;
+    background-color: transparent;
+    width: 60px;
+    font-size: 18px;
+  }
+  .button-expand {
+    display: inline-flex;
+    position: fixed;
+    bottom: 1rem;
+    right: 0.5rem;
+    background-color: #0086DB;
+    color: white;
+    text-decoration: none;
+    border-radius: 60px;
+    height: 40px;
+    align-items: center;
+    overflow:hidden;
+    width: auto;
+    max-width: 40px; /** I'm animating max-width because width needs to be auto, and auto can't be animated **/
+    -webkit-transition: max-width 0.5s;
+    transition: max-width 0.5s;
+  }
+  .button-expand:hover {
+    max-width: 300px;
+  }
+  
+  .button-expand-icon {
+    font-size: 16px;
+    margin-right: 15px;
+    padding: 0px 12px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .button-expand-text {
+    white-space: nowrap;
+    padding-right: 15px;
+  }

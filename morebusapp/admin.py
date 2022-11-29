@@ -32,6 +32,12 @@ class IndicatorAdmin(admin.ModelAdmin):
     list_display = ('name', 'lineID', 'machineID', 'tag_id', 'register', 'data_type', 'display', 'asg')
 admin.site.register(Indicator, IndicatorAdmin)
 
+class MachineInfoAdmin(admin.ModelAdmin):
+    list_display = ('lineID', 'machineID', 'line_name', 'machine_no', 'machine_name', 'ip_camera')
+admin.site.register(MachineInfo, MachineInfoAdmin)
+
+
+
 class UserProfileInLine(admin.StackedInline):
     model = UserProfile
     can_delete: False

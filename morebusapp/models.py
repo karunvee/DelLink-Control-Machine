@@ -12,7 +12,7 @@ class LineInfo(models.Model):
 
 class Indicator(models.Model):
     DATA_TYPE = (
-        ('BIT', 'BIT'), ('INT', 'INT'), ('FLOAT', 'FLOAT'),('ASCII', 'ASCII')
+        ('BIT', 'BIT'), ('STRING', 'STRING'), ('STATUS', 'STATUS'), ('ERROR CODE', 'ERROR CODE')
     )
     DISPLAY_TYPE = (
         ('BUTTON', 'BUTTON'), ('INDICATOR', 'INDICATOR'), ('TEXT', 'TEXT'), ('NUMBER','NUMBER')
@@ -31,6 +31,16 @@ class Indicator(models.Model):
     def __str__(self):
         return self.name
 
+class MachineInfo(models.Model):
+    line_name = models.OneToOneField(LineInfo, on_delete=models.CASCADE)
+    machineID = models.CharField(max_length = 255)
+    lineID = models.CharField(max_length = 255)
+    machine_no = models.CharField(max_length = 255)
+    machine_name = models.CharField(max_length = 255)
+    ip_camera = models.CharField(max_length = 255)
+
+    def __str__(self):
+        return self.machine_name
 # class Lines(models.Model):
 #     name = models.CharField(max_length = 255, null=True)
 

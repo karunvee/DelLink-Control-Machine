@@ -7,7 +7,7 @@ const dataBox = document.getElementById('data-box')
             success:function(response){
                 setTimeout(()=>{
                     spinnerBox.classList.add('invisable')
-                    console.log(response)
+                    // console.log(response)
                 },500)
             },
             error: function(error){

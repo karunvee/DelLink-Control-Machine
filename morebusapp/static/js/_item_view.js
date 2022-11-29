@@ -90,6 +90,19 @@
                         document.getElementById("mTagValue"+String(val.tid)).value = val.value;
                     }
                 }
+
+                var indicator_status = document.getElementById("indicator-status" + String(val.tid));
+                if(indicator_status != null ){
+                        document.getElementById("indicator-status"+String(val.tid)).value = val.value;
+                        StatusMachine(val.value);
+                }
+                var errorCode = document.getElementById("errorCode" + String(val.tid));
+                if(errorCode != null){
+                        document.getElementById("errorCode"+String(val.tid)).value = val.value;
+                        if(val.value != 0){
+                            
+                        }
+                }
  
                 // AssignTag status update here
                 var ass_tag = document.getElementById("assTag" + String(val.tid));
@@ -277,3 +290,77 @@
             window.open(url_dia,"", "width=1200,height=750");
         }
         
+        p_val = "";
+        function StatusMachine(val){
+            const sg = document.querySelector('#status-green');
+            const sy = document.querySelector('#status-yellow');
+            const sr = document.querySelector('#status-red');
+            if( val != p_val){
+                switch (val){
+                    case "0":
+                        document.getElementById("text-indicator-status").innerText = "Normal";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sg.classList.add("green");
+                        break;
+                    case "1":
+                        document.getElementById("text-indicator-status").innerText = "Error";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sr.classList.add("red");
+                        break;
+                    case "2":
+                        document.getElementById("text-indicator-status").innerText = "Pause";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    case "3":
+                        document.getElementById("text-indicator-status").innerText = "standby";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    case "4":
+                        document.getElementById("text-indicator-status").innerText = "Wait for material";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    case "5":
+                        document.getElementById("text-indicator-status").innerText = "Output full material";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    case "6":
+                        document.getElementById("text-indicator-status").innerText = "Material low";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    case "7":
+                        document.getElementById("text-indicator-status").innerText = "Change line";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        sy.classList.add("yellow");
+                        break;
+                    default:
+                        document.getElementById("text-indicator-status").innerText = "Unknown";
+                        sg.classList.remove("green");
+                        sy.classList.remove("yellow");
+                        sr.classList.remove("red");
+                        break;
+                }
+            }
+            p_val = val;
+            
+        }

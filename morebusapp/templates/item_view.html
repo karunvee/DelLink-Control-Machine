@@ -60,16 +60,30 @@
             <section class="body-content">
                 <div class="pnl box-camera">
                     <h5 class="head-pnl">RTSP camera</h5>
-                    <img src="{% url 'remote_view' %}" width="100%" height="450px">
+                    <img src="{% url 'camera_view' %}" width="100%" height="450px" 
+                    onerror="this.onerror=null; this.src='{% static 'img/camera-not-found.jpg' %}'">
                 </div>
                 <div class="pnl box-command-monitor">
                     <h5 class="head-pnl">Monitor & Controller</h5>
                     <div class="cmd-container">
                         <!-- Button generator -->
                         <div class="cmd-btn">
+                            {% for tag in status_member %}
+                                <input id="assTag{{tag.tag_id}}"  type="hidden"/>
+                                    <div class="container-status">
+                                        <input id="indicator-status{{tag.tag_id}}" type="hidden"/>
+                                        <div id="status-green" class="indicator-status"></div>
+                                        <div id="status-yellow" class="indicator-status"></div>
+                                        <div id="status-red" class="indicator-status"></div>
+                                    </div>
+                                    <div class="text-status">
+                                        <span id="text-indicator-status">Status</span>
+                                    </div>
+                                    <hr>
+                            {% endfor %}
                             {% for tag in indicator_list %}
-                            <input id="assTag{{tag.tag_id}}" style="display: none;"/>
                                 {% if tag.data_type == "BIT" %}
+                                <input id="assTag{{tag.tag_id}}"  type="hidden"/>
                                     <input id="bTagValue{{tag.tag_id}}" hidden/>
                                     <button id="btn-TagValue{{tag.tag_id}}" class="btn-TagValue" style="--btn-color: {{tag.color}};" onclick="WriteData({{tag.tag_id}}, 2)">{{tag.name}}</button>
                                 {% endif %}
@@ -79,8 +93,17 @@
                         <!-- Text generator -->
                         <div class="cmd-text">
                             {% for tag in indicator_list %}
-                            <input id="assTag{{tag.tag_id}}" style="display: none;"/>
-                                {% if tag.data_type != "BIT" %}
+                                {% if tag.data_type == "ERROR CODE" %}
+                                <input id="assTag{{tag.tag_id}}"  type="hidden"/>
+                                    <div class="text-error-code">
+                                        <span>Error code</span>
+                                        <input  id="errorCode{{tag.tag_id}}"  value="" disabled/>
+                                    </div>
+                                    {% endif %}
+                            {% endfor %}
+                            {% for tag in indicator_list %}
+                                {% if tag.data_type == "ASCII" %}
+                                <input id="assTag{{tag.tag_id}}"  type="hidden"/>
                                     <label>{{tag.name}}</label>
                                     <div class="cmd-text-send">
                                         <input type="text" id="mTagValue{{tag.tag_id}}"/><button onclick="WriteData({{tag.tag_id}}, 1)">Send</button>
@@ -115,7 +138,12 @@
             </section>
         </div>
     </section>
-
+    <div class="btn-control-page">
+        <a href="{% url 'line_view' lineID %}" class="button-expand">
+            <span class="button-expand-icon"><i class='bx bx-arrow-back'></i></span>
+            <span class="button-expand-text">Previous page</span>
+        </a>
+    </div>
     <!-- Indicator assignment form -->
     <div id="assignForm" class="form">
         <form class="form-container" action="/machine_view/ln{{lineID}}id{{mID}}/" method="post">
@@ -133,9 +161,11 @@
                 <select id="data_type" name="data_type" onchange="getDataType()">
                     <option value="">-</option>
                     <option value="BIT">BIT</option>
-                    <option value="INT">INT</option>
-                    <option value="FLOAT">FLOAT</option>
-                    <option value="ASCII">ASCII</option>
+                    <!-- <option value="INT">INT</option>
+                    <option value="FLOAT">FLOAT</option> -->
+                    <option value="ASCII">STRING</option>
+                    <option value="STATUS">STATUS</option>
+                    <option value="ERROR CODE">ERROR CODE</option>
                 </select>
                 <div id="datatype_bit" style="display: none;">
                     <strong>Display type</strong>
@@ -193,6 +223,8 @@
             </div>
         </form> -->
     </div>
+
+
 
     <script src="{% static "js/_item_view.js" %}" ></script>
 </body>
