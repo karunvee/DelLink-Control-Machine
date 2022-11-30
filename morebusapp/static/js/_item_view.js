@@ -100,7 +100,28 @@
                 if(errorCode != null){
                         document.getElementById("errorCode"+String(val.tid)).value = val.value;
                         if(val.value != 0){
+                            document.getElementById('alert-message').style.display = "block";
+                            var errorMsg = document.getElementById("errorMsg" + String(val.value));
+                            if(errorMsg != null){
+                                var eMsg = document.getElementById("errorMsg" + String(val.value)).value;
+                                document.querySelector('#alert-container').innerHTML = `
+                                            <div class="alert">
+                                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                                                <strong>Error!</strong> ${eMsg}.
+                                            </div>`;
+                            }
+                            else{
+                                document.querySelector('#alert-container').innerHTML = `
+                                            <div class="alert">
+                                                <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+                                                <strong>Error!</strong> Unknown error message.
+                                            </div>`;
+                            }
                             
+                        }
+                        else{
+                            document.getElementById('alert-message').style.display = "none";
+                            document.querySelector('#alert-container').innerHTML = "";
                         }
                 }
  
@@ -253,8 +274,8 @@
                 <h1>Question ?</h1>
                 <p>Are you sure you want to delete this indicator id :${tid}, line :${lineID}, DeviceID :${dID}?</p>
                 <div class="clearfix">
-                    <button class="btn-delete no" type="button" onclick="document.getElementById('confirmForm').style.display='none'">No</button>
                     <button class="btn-delete yes" onclick="location.href='/delete_indicator/ln${lineID}id${dID}tag_id${tid}/';">Yes, I'm sure</button>
+                    <button class="btn-delete no" type="button" onclick="document.getElementById('confirmForm').style.display='none'">No</button>
                 </div>
             </div>
             </div>`;

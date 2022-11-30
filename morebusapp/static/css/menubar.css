@@ -318,6 +318,12 @@ body.dark .switch::before{
     font-size: 30px;
     font-weight: 500;
     color: var(--text-color);
+    padding: 12px 20px;
+}
+.header .content-item-view{
+    font-size: 30px;
+    font-weight: 500;
+    color: var(--text-color);
     padding: 12px 60px;
 }
 .header .content .body-content h5{

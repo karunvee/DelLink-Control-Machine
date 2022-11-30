@@ -13,6 +13,7 @@ urlpatterns = [
     path('line_view/ln<int:ln>/', views.line_view, name='line_view'),
     path('machine_view/ln<str:ln>id<str:id>/', views.item_view, name='item_view'),
     path('setting/', views.setting_view, name='setting_view'),
-    path('camera_view/', views.camera_view, name='camera_view'),
+    path('notice_view/', views.notice_view, name='notice_view'),
+    path('camera_view<str:id>/', views.camera_view, name='camera_view'),
     path('delete_indicator/ln<str:ln>id<str:id>tag_id<str:tid>/', views.delete_indicator, name='delete_indicator'),
 ]

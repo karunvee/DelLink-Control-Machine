@@ -26,46 +26,46 @@
                 {% if user.is_authenticated %}
                     {% for val in response %}
                     <div class="machine-item {{status}}" onclick="location.href='{% url 'item_view' line_id val.deviceId %}';">
-                    <!-- <div class="machine-item {{status}}" onclick="location.href='../machine_view/{{val.deviceId}}';"> -->
                         <div class="item-header">
                             <h5>{{val.comment}}</h5>
-                            {% if val.status == 0 %}
-                            <span class="display Offline"> Offline </span>
-                            {% else %}
-                            <span class="display Online"> Online </span>
-                            {% endif %}
-                        </div>
-                        <div class="item-info">
-                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
                             <div class="container-status">
                                 <input id="indicator-status{{val.deviceId}}" type="hidden"/>
                                 <div id="status-green{{val.deviceId}}" class="indicator-status"></div>
                                 <div id="status-yellow{{val.deviceId}}" class="indicator-status"></div>
                                 <div id="status-red{{val.deviceId}}" class="indicator-status"></div>
                             </div>
+                            
+                        </div>
+                        <div class="item-info">
+                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
+                            {% if val.status == 0 %}
+                            <span class="display small Offline"> Offline </span>
+                            {% else %}
+                            <span class="display small Online"> Online </span>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}
                 {% else %}
                     {% for val in response %}
                     <div class="machine-item {{status}}" onclick="location.href='{% url 'login_user' %}';">
-                    <!-- <div class="machine-item {{status}}" onclick="location.href='../machine_view/{{val.deviceId}}';"> -->
                         <div class="item-header">
                             <h5>{{val.comment}}</h5>
-                            {% if val.status == 0 %}
-                            <span class="display Offline"> Offline </span>
-                            {% else %}
-                            <span class="display Online"> Online </span>
-                            {% endif %}
-                        </div>
-                        <div class="item-info">
-                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
                             <div class="container-status">
                                 <input id="indicator-status{{val.deviceId}}" type="hidden"/>
                                 <div id="status-green{{val.deviceId}}" class="indicator-status"></div>
                                 <div id="status-yellow{{val.deviceId}}" class="indicator-status"></div>
                                 <div id="status-red{{val.deviceId}}" class="indicator-status"></div>
                             </div>
+                            
+                        </div>
+                        <div class="item-info">
+                            <span>IP : {{val.ip}} &ensp;Device : {{val.name}}-id{{val.deviceId}}</span>
+                            {% if val.status == 0 %}
+                            <span class="display small Offline"> Offline </span>
+                            {% else %}
+                            <span class="display small Online"> Online </span>
+                            {% endif %}
                         </div>
                     </div>
                     {% endfor %}

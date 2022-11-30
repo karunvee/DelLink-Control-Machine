@@ -15,7 +15,7 @@
     {% include "Necessary/menubar.html" %}
     {% include "Necessary/loading_spinner.html" %}
     <section class="header">
-        <div class="content">
+        <div class="content-item-view">
             <div class="head-container">
                 <div class="header-info">
                     <h3 id="machineName" class="machineName"></h3>
@@ -53,15 +53,13 @@
                         </div>
                 </div>
                 <!-- Connection status -->
-                
-                
             </div>
             
             <section class="body-content">
                 <div class="pnl box-camera">
                     <h5 class="head-pnl">RTSP camera</h5>
-                    <img src="{% url 'camera_view' %}" width="100%" height="450px" 
-                    onerror="this.onerror=null; this.src='{% static 'img/camera-not-found.jpg' %}'">
+                    <img src="{% url 'camera_view' 1 %}" width="100%" height="450px" 
+                    onerror="this.onerror=null; this.src='{% static 'img/camera-not-found.jpg' %}'" loading="lazy">
                 </div>
                 <div class="pnl box-command-monitor">
                     <h5 class="head-pnl">Monitor & Controller</h5>
@@ -99,7 +97,12 @@
                                         <span>Error code</span>
                                         <input  id="errorCode{{tag.tag_id}}"  value="" disabled/>
                                     </div>
-                                    {% endif %}
+                                    {% for e_msg in notification_error%}
+                                            <input id="errorMsg{{e_msg.error_code}}"  type="hidden" value="{{e_msg.error_message}}"/>
+                                    {% endfor %}
+                                    <div id="alert-container" class="alert-container">
+                                    </div>   
+                                {% endif %}
                             {% endfor %}
                             {% for tag in indicator_list %}
                                 {% if tag.data_type == "ASCII" %}
@@ -115,11 +118,11 @@
                     
                 </div>        
             </section>
+
             <section class="body-tags">
                 <div class="pnl box-machineView">
                     <div class="header-tags">
                         <h5 class="head-pnl">Tag members</h5>
-                        <!-- <input class="btn-add" type="button" onclick="window.open('http://www.yahoo.com', '_blank')" value="Add Tag" /> -->
                         <button class="btn-add" id="addTag" onclick="openDIAform()">Add Tag</button>
                     </div>
                     <div class="table-container">
@@ -138,11 +141,18 @@
             </section>
         </div>
     </section>
-    <div class="btn-control-page">
-        <a href="{% url 'line_view' lineID %}" class="button-expand">
-            <span class="button-expand-icon"><i class='bx bx-arrow-back'></i></span>
-            <span class="button-expand-text">Previous page</span>
+    <div class="alert-message" id="alert-message" style="display: none;">
+        <a href="#" class="notification">
+            <span class="notification-icon"><i class='bx bxs-bell-ring'></i></span>
+            <span class="button-expand-text">Error Alert</span>
+            <!-- <span class="badge">3</span> -->
         </a>
+    </div>
+    <div class="btn-control-page">
+            <a href="{% url 'line_view' lineID %}" class="button-expand">
+                <span class="button-expand-icon"><i class='bx bx-arrow-back'></i></span>
+                <span class="button-expand-text">Previous page</span>
+            </a>
     </div>
     <!-- Indicator assignment form -->
     <div id="assignForm" class="form">
@@ -199,8 +209,6 @@
                         <option value="NUMBER">NUMBER</option>
                     </select>
                 </div>
-                <!-- <input type="checkbox" id="writable" name="writable" value="" style="cursor: pointer;">
-                <label for="writable" style="cursor: pointer;">Writeable</label> -->
                 <hr>
                 <div class="clearfix">
                     <button id="btn-add" class="add" type="submit" style="display: none;">Add</button>
@@ -212,16 +220,6 @@
 
     <!-- Delete Tag Confirmable windows -->
     <div id="confirmForm" class="confirmForm">
-        <!-- <form class="confirmForm-container">
-            <div class="confirmForm-content">
-                <h1>Question ?</h1>
-                <p>Are you sure you want to delete the indicator ?</p>
-                <div class="clearfix">
-                    <button class="btn-delete no" type="button" onclick="document.getElementById('confirmForm').style.display='none'">No</button>
-                    <button class="btn-delete yes">Yes, I'm sure</button>
-                </div>
-            </div>
-        </form> -->
     </div>
 
 

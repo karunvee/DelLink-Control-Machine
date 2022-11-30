@@ -36,6 +36,9 @@ class MachineInfoAdmin(admin.ModelAdmin):
     list_display = ('lineID', 'machineID', 'line_name', 'machine_no', 'machine_name', 'ip_camera')
 admin.site.register(MachineInfo, MachineInfoAdmin)
 
+class ErrorNotificationAdmin(admin.ModelAdmin):
+    list_display = ('tag_member', 'error_code', 'error_message')
+admin.site.register(ErrorNotification, ErrorNotificationAdmin)
 
 
 class UserProfileInLine(admin.StackedInline):

@@ -1,5 +1,5 @@
 
-from .models import  LineInfo, Indicator
+from .models import  *
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
 from django.template import loader
@@ -78,6 +78,12 @@ def line_view(request, ln):
             'status_code' : d_response.status_code,
         }
         return render(request, 'Error/ErrorAPI.html', error_context)
+def notice_view(request):
+    errorMsg = ErrorNotification.objects.all()
+    context = {
+        'errorMsg' : errorMsg,
+    }
+    return render(request, 'notice_view.html', context)
 
 def setting_view(request):
 
@@ -94,6 +100,9 @@ def item_view(request, ln ,id="0"):
         indicator_list = Indicator.objects.filter(machineID__exact = id, lineID__exact = str(ln))
         status_member = Indicator.objects.filter(machineID__exact = id, lineID__exact = str(ln), data_type__exact = 'STATUS')
         
+        #Notification error
+        notification_error = ErrorNotification.objects.filter(tag_member__machineID = id, tag_member__lineID = str(ln))
+
         if request.method == 'POST':
             machineID = id
             lineID = ln
@@ -137,6 +146,7 @@ def item_view(request, ln ,id="0"):
         if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
             tag_data = t_response.json()
             context = {
+                'notification_error' : notification_error,
                 'status_member' : status_member,
                 'indicator_list' : indicator_list,
                 'displayType_list' : displayType_list,

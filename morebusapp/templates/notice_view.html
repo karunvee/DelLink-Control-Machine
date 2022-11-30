@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/notice_view.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    {% include "Necessary/loading_spinner.html" %}
+    {% include "Necessary/menubar.html" %}
+    <section class="header">
+        <div class="content">
+            <div class="header-container">
+                <h3>Error Notification</h3>
+                <div class="alert-count">
+                    <span>3</span>
+                </div>
+            </div>
+            <div>
+                {% for i in '0'|make_list %}
+                    <!-- {{ forloop.counter }} -->
+                    <div class="alert">
+                        <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+                        <div class="alert-header">
+                            <span><strong>&ensp;1 Lorem, ipsum dolor.&ensp;</strong></span>
+                            <div class="alert-tag">
+                                <span>&ensp;CN05&ensp;</span>
+                                <span>&ensp;Auto Load Router&ensp;</span>
+                            </div>
+                        </div>
+                        <hr> 
+                        <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi nam, aliquid eos et cupiditate, quas possimus repellat a modi quam aspernatur rem aperiam incidunt ad deleniti ipsa atque sunt iusto?</span> 
+                    </div>
+                {% endfor %}
+                
+            </div>
+        </div>
+    </section>
+    
+</body>
+</html>

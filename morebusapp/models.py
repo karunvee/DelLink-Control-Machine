@@ -29,7 +29,7 @@ class Indicator(models.Model):
     asg = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return "%s %s %s" % (self.name, self.lineID, self.machineID)
 
 class MachineInfo(models.Model):
     line_name = models.OneToOneField(LineInfo, on_delete=models.CASCADE)
@@ -41,6 +41,14 @@ class MachineInfo(models.Model):
 
     def __str__(self):
         return self.machine_name
+    
+class ErrorNotification(models.Model):
+    tag_member = models.ForeignKey(Indicator, on_delete=models.CASCADE, null=True)
+    error_code = models.CharField(max_length= 255)
+    error_message = models.CharField(max_length= 255)
+
+    def __str__(self):
+        return self.error_message
 # class Lines(models.Model):
 #     name = models.CharField(max_length = 255, null=True)
 
