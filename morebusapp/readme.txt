@@ -20,7 +20,7 @@ THBPONBH005708.delta.corp
 
 
 Auto Load Router CN05
-M200 : Home
-M201 : Start
-M202 : Pause
-M203 : Stop
+S400 : Home
+S401 : Start
+S402 : Pause
+S403 : Stop

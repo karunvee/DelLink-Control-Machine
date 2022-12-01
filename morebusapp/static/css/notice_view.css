@@ -39,20 +39,20 @@
 .alert {
     cursor: pointer;
     font-size: 18px;
-    margin: 10px 50px;
+    margin: 30px 50px;
     padding: 20px;
     background-color: #ff8279;
     border-radius: 10px;
     color: white;
     margin-bottom: 0.5rem;
     transition: 1s ease;
+    box-shadow: 0 10px 15px 0 rgba(69, 69, 69, 0.2), 0 6px 20px 0 rgba(8, 55, 109, 0.19);
   }
 .alert:hover{
     -webkit-transform: scale(0.95);
   -ms-transform: scale(0.95);
   transform: scale(0.95);
   transition: 1s ease;
-  box-shadow: 0 10px 15px 0 rgba(4, 152, 251, 0.2), 0 6px 20px 0 rgba(8, 55, 109, 0.19);
 }
   .alert-header{
     display: flex;

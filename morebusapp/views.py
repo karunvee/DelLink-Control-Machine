@@ -1,20 +1,18 @@
-
+from django.views import View
 from .models import  *
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, StreamingHttpResponse
-from django.template import loader
+from django.template import loader, Context, Template 
 from django.urls import reverse
+from django.core.serializers.json import DjangoJSONEncoder
 # from pymodbus.client.sync import ModbusTcpClient
 # from pymodbus.bit_read_message import ReadCoilsResponse, ReadCoilsRequest
-import requests
+import requests, time, json
 import urllib.request
 import cv2
 from django.views.decorators import gzip
 import threading
 
-# DIA_IP = '10.195.220.7'
-# DIA_PORT = '9000'
-API_URL = 'http://10.195.220.7:9000/api/v1' 
 SERVER_IP = '10.234.232.101'
 
 def ReturnHttpDIA(ip, port, method):
@@ -78,12 +76,6 @@ def line_view(request, ln):
             'status_code' : d_response.status_code,
         }
         return render(request, 'Error/ErrorAPI.html', error_context)
-def notice_view(request):
-    errorMsg = ErrorNotification.objects.all()
-    context = {
-        'errorMsg' : errorMsg,
-    }
-    return render(request, 'notice_view.html', context)
 
 def setting_view(request):
 
@@ -209,3 +201,67 @@ def gen(camera):
         frame = camera.get_frame()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
+
+
+def gen_error_msg():
+    # t = loader.get_template('notice_msg.html')
+    t = Template('{{ tag_data }} <br />\n')
+    while True:
+        t_response = requests.get('http://10.195.220.21:5000/api/v1/devices')
+        if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
+            tag_data = t_response.json()
+        else:
+            tag_data = 'error to get data'
+
+        context = Context({'tag_data': tag_data,})
+        time.sleep(1)
+        yield t.render(context)
+
+def hello():
+    yield 'Hello,'
+    yield 'there!'
+
+def stream_response_generator():
+    yield "<html><body>\n"
+    x = 0
+    while True:
+        x = x + 1
+        yield "<h1>Hi , i'm here</h1><div>%s</div>\n" % x
+        yield " " * 1024  # Encourage browser to render incrementally
+        time.sleep(1)
+    yield "</body></html>\n"
+
+def notice_msg(request):
+    try:
+        return StreamingHttpResponse(stream_response_generator(), content_type="text/html")
+    except:
+        pass
+    return render(request, 'notice_msg.html')
+    # response = StreamingHttpResponse(stream_response_generator(), content_type='text/html')
+    # return response
+
+def event_stream():
+    ini_data = ""
+    while True: 
+        data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
+                "error_message", )),
+                cls=DjangoJSONEncoder
+            )
+        if not ini_data == data:
+            yield "\ndata: {}\n\n".format(data)
+            ini_data = data
+        time.sleep(1)
+
+class ErrorStreamView(View):
+    def get(self, request):
+        response = StreamingHttpResponse(event_stream())
+        response['Content-Type'] = 'text/event-stream'
+        return response
+        
+
+def notice_view(request):    
+    errorMsg = ErrorNotification.objects.all()
+    context = {
+        'errorMsg' : errorMsg,
+    }
+    return render(request, 'notice_view.html', context)
