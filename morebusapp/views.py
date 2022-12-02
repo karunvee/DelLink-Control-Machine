@@ -205,20 +205,24 @@ def gen(camera):
 
 
 def event_stream():
-    machine_members = {}
+    machine_members = dict()
     ini_data = ""
+
     line_ = LineInfo.objects.all()
+
     for m_ip in line_:
-        t_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
-        if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
-            response_data = t_response.json()
-            i=0
+        m_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
+        if m_response.status_code == requests.codes.ok or m_response.status_code == requests.codes.no_content:
+            response_data = m_response.json()
+            deviceList = []
             for val in response_data:
-                i = i+1
-                machine_members[m_ip.ip + 'index' + str(i)] = str(val['deviceId'])
-            # machine_members[m_ip.ip] = str(response_data['deviceId'])
-    print (machine_members)  
+                deviceList.append(val['deviceId'])
+            if m_ip.ip not in machine_members:
+                machine_members[m_ip.ip + ':' + m_ip.port] = deviceList
+
+    print (machine_members.keys[0])  
     while True: 
+        # t_response = requests.get(ReturnHttpDIA(machine_members.keys[0], 'devices'))
         data = json.dumps(machine_members, cls=DjangoJSONEncoder)
         # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
         #         "error_message", )),
