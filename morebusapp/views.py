@@ -12,6 +12,7 @@ import urllib.request
 import cv2
 from django.views.decorators import gzip
 import threading
+import logging
 
 SERVER_IP = '10.234.232.101'
 
@@ -203,50 +204,26 @@ def gen(camera):
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
 
-def gen_error_msg():
-    # t = loader.get_template('notice_msg.html')
-    t = Template('{{ tag_data }} <br />\n')
-    while True:
-        t_response = requests.get('http://10.195.220.21:5000/api/v1/devices')
-        if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
-            tag_data = t_response.json()
-        else:
-            tag_data = 'error to get data'
-
-        context = Context({'tag_data': tag_data,})
-        time.sleep(1)
-        yield t.render(context)
-
-def hello():
-    yield 'Hello,'
-    yield 'there!'
-
-def stream_response_generator():
-    yield "<html><body>\n"
-    x = 0
-    while True:
-        x = x + 1
-        yield "<h1>Hi , i'm here</h1><div>%s</div>\n" % x
-        yield " " * 1024  # Encourage browser to render incrementally
-        time.sleep(1)
-    yield "</body></html>\n"
-
-def notice_msg(request):
-    try:
-        return StreamingHttpResponse(stream_response_generator(), content_type="text/html")
-    except:
-        pass
-    return render(request, 'notice_msg.html')
-    # response = StreamingHttpResponse(stream_response_generator(), content_type='text/html')
-    # return response
-
 def event_stream():
+    machine_members = {}
     ini_data = ""
+    line_ = LineInfo.objects.all()
+    for m_ip in line_:
+        t_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
+        if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
+            response_data = t_response.json()
+            i=0
+            for val in response_data:
+                i = i+1
+                machine_members[m_ip.ip + 'index' + str(i)] = str(val['deviceId'])
+            # machine_members[m_ip.ip] = str(response_data['deviceId'])
+    print (machine_members)  
     while True: 
-        data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
-                "error_message", )),
-                cls=DjangoJSONEncoder
-            )
+        data = json.dumps(machine_members, cls=DjangoJSONEncoder)
+        # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
+        #         "error_message", )),
+        #         cls=DjangoJSONEncoder
+        #     )
         if not ini_data == data:
             yield "\ndata: {}\n\n".format(data)
             ini_data = data
@@ -265,3 +242,42 @@ def notice_view(request):
         'errorMsg' : errorMsg,
     }
     return render(request, 'notice_view.html', context)
+
+
+
+
+
+
+
+
+
+
+
+
+# def hello():
+#     yield 'Hello,'
+#     yield 'there!'
+
+# def stream_response_generator():
+#     yield "<html><body>\n"
+#     x = 0
+#     while True:
+#         x = x + 1
+#         yield "<h1>Hi , i'm here</h1><div>%s</div>\n" % x
+#         yield " " * 1024  # Encourage browser to render incrementally
+#         time.sleep(1)
+#     yield "</body></html>\n"
+
+# def gen_error_msg():
+#     # t = loader.get_template('notice_msg.html')
+#     t = Template('{{ tag_data }} <br />\n')
+#     while True:
+#         t_response = requests.get('http://10.195.220.21:5000/api/v1/devices')
+#         if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
+#             tag_data = t_response.json()
+#         else:
+#             tag_data = 'error to get data'
+
+#         context = Context({'tag_data': tag_data,})
+#         time.sleep(1)
+#         yield t.render(context)
