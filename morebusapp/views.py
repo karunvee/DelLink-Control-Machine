@@ -232,14 +232,14 @@ def event_stream():
                     for val in data_tag:
                         if val['name'] == 'statusCode':     #filter find only statusCode
                             print(str(val['deviceId']) + "/" + str(val['tid']))
-                            # data = json.dumps(list(), cls=DjangoJSONEncoder)
+                            data = json.dumps(val, cls=DjangoJSONEncoder)
                             # # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
                             # #         "error_message", )),
                             # #         cls=DjangoJSONEncoder
                             # #     )
-                            # if not ini_data == data:
-                            #     yield "\ndata: {}\n\n".format(data)
-                            #     ini_data = data
+                            if not ini_data == data:
+                                yield "\ndata: {}\n\n".format(data)
+                                ini_data = data
                             time.sleep(2)
 
 class ErrorStreamView(View):
