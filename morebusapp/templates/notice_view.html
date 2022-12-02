@@ -51,7 +51,7 @@
             console.log(e);
             final_data = JSON.parse(e.data);
             final_data.forEach(function (item){
-                content = `<h1>${item['deviceId']}</h1>`;
+                content = `<h1>${item['deviceId']} ${item['name']} ${item['tid']}</h1>`;
             })
             console.log(content);
         }

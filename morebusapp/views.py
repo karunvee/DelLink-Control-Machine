@@ -210,28 +210,37 @@ def event_stream():
 
     line_ = LineInfo.objects.all()
 
-    for m_ip in line_:
+    for m_ip in line_:           #loop for get ip and port of each lines.
         m_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
         if m_response.status_code == requests.codes.ok or m_response.status_code == requests.codes.no_content:
             response_data = m_response.json()
-            deviceList = []
-            for val in response_data:
-                deviceList.append(val['deviceId'])
-            if m_ip.ip not in machine_members:
-                machine_members[m_ip.ip + ':' + m_ip.port] = deviceList
-
-    print (machine_members.keys[0])  
+            deviceList = []               #array for container all deviceId. and clear array to be empty
+            for val in response_data:     #loop for insert each deviceId to array
+                deviceList.append(val['deviceId'])      #insert to array
+            key_ = m_ip.ip + ':' + m_ip.port
+            if key_ not in machine_members:          #make sure these array is not duplicate inserting
+                machine_members[key_] = deviceList  #insert key and data(array) to dictionary
     while True: 
-        # t_response = requests.get(ReturnHttpDIA(machine_members.keys[0], 'devices'))
-        data = json.dumps(machine_members, cls=DjangoJSONEncoder)
-        # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
-        #         "error_message", )),
-        #         cls=DjangoJSONEncoder
-        #     )
-        if not ini_data == data:
-            yield "\ndata: {}\n\n".format(data)
-            ini_data = data
-        time.sleep(1)
+        for key in machine_members.keys():  #find those key from dictionary
+            ip = key.split(':')[0]
+            port = key.split(':')[1]
+            for id in machine_members[key]:
+                print(ip + ':' + port + '>>' + str(id))
+                t_response = requests.get(ReturnHttpDIA(ip, port, 'devices/' + str(id) + '/tags'))
+                if t_response.status_code == requests.codes.ok or t_response.status_code == requests.code.no_content:
+                    data_tag = t_response.json()
+                    for val in data_tag:
+                        if val['name'] == 'statusCode':     #filter find only statusCode
+                            print(str(val['deviceId']) + "/" + str(val['tid']))
+                            # data = json.dumps(list(), cls=DjangoJSONEncoder)
+                            # # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
+                            # #         "error_message", )),
+                            # #         cls=DjangoJSONEncoder
+                            # #     )
+                            # if not ini_data == data:
+                            #     yield "\ndata: {}\n\n".format(data)
+                            #     ini_data = data
+                            time.sleep(2)
 
 class ErrorStreamView(View):
     def get(self, request):
