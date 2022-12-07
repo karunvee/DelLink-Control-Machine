@@ -49,10 +49,9 @@
         }
         eventsource.onmessage = function(e){
             console.log(e);
-            final_data = JSON.parse(e.data);
-            final_data.forEach(function (item){
-                content = `<h1>${item['deviceId']} ${item['name']} ${item['tid']}</h1>`;
-            })
+            // final_data = JSON.parse(e.data);
+            // content = `<h1>${final_data['deviceId']} ${final_data['name']} ${final_data['tid']} ${final_data['value']}</h1>`;
+            
             console.log(content);
         }
         eventsource.onerror = function(e){

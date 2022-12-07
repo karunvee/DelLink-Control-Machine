@@ -172,7 +172,7 @@ def delete_indicator(request, ln ,id="0", tid="0"):
 @gzip.gzip_page
 def camera_view(request, id):
     try:
-        rtsp = "rtsp://admin:@Admin12345@192.168.1.108:554/cam/realmonitor?channel=1&subtype=0"
+        rtsp = "rtsp://admin:admin123@192.168.1.168/cam/realmonitor?channel=1&subtype=00"
         cam = VideoCamera(rtsp)
         return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
     except:
@@ -224,24 +224,35 @@ def event_stream():
         for key in machine_members.keys():  #find those key from dictionary
             ip = key.split(':')[0]
             port = key.split(':')[1]
+            line_name = LineInfo.objects.get(ip__exact = ip)   #get Line name
             for id in machine_members[key]:
+                
                 print(ip + ':' + port + '>>' + str(id))
                 t_response = requests.get(ReturnHttpDIA(ip, port, 'devices/' + str(id) + '/tags'))
                 if t_response.status_code == requests.codes.ok or t_response.status_code == requests.code.no_content:
                     data_tag = t_response.json()
                     for val in data_tag:
-                        if val['name'] == 'statusCode':     #filter find only statusCode
-                            print(str(val['deviceId']) + "/" + str(val['tid']))
-                            data = json.dumps(val, cls=DjangoJSONEncoder)
-                            # # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
-                            # #         "error_message", )),
-                            # #         cls=DjangoJSONEncoder
-                            # #     )
-                            if not ini_data == data:
-                                yield "\ndata: {}\n\n".format(data)
-                                ini_data = data
-                            time.sleep(2)
+                        if val['name'] == 'errorCode_test':     #filter find only statusCode
+                            
+                            if val['value'] != 0 :
+                                print("###\nLine name :%s | deviceId :%s | tagId :%s | tagName :%s ==>> value :%s\n###" % (line_name.name, str(val['deviceId']), str(val['tid']),  val['name'], str(val['value'])))
 
+                                if ErrorNotification.objects.filter(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value']).exists():
+                                    error_msg = ErrorNotification.objects.get(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value'])
+                                    print(error_msg)
+                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' : error_msg.error_message }, cls=DjangoJSONEncoder)
+                                else:
+                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' :'Unknown error' }, cls=DjangoJSONEncoder)
+                                
+                                if not ini_data == data:
+                                    # data = json.dumps(val, cls=DjangoJSONEncoder)
+                                    # # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
+                                    # #         "error_message", )),
+                                    # #         cls=DjangoJSONEncoder
+                                    # #     )
+                                    yield "\ndata: {}\n\n".format(data)
+                                    ini_data = data
+                time.sleep(0.2)
 class ErrorStreamView(View):
     def get(self, request):
         response = StreamingHttpResponse(event_stream())

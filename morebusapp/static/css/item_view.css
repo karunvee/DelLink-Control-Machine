@@ -482,3 +482,21 @@ input:focus{
   .closebtn:hover {
     color: black;
   }
+.cmd-indicator{
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  background-color: #CCCCCC;
+  border-radius: 10px;
+}
+.cmd-indicator.ON{
+  background-color: #7aca62;
+}
+.cmd-indicator.OFF{
+  background-color: #CCCCCC;
+}
+.cmd-indicator span{
+  color: #ffff;
+text-align: center;
+}

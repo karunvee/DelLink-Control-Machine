@@ -80,7 +80,7 @@
                                     <hr>
                             {% endfor %}
                             {% for tag in indicator_list %}
-                                {% if tag.data_type == "BIT" %}
+                                {% if tag.data_type == "BIT" and tag.display == "BUTTON" %}
                                 <input id="assTag{{tag.tag_id}}"  type="hidden"/>
                                     <input id="bTagValue{{tag.tag_id}}" hidden/>
                                     <button id="btn-TagValue{{tag.tag_id}}" class="btn-TagValue" style="--btn-color: {{tag.color}};" onclick="WriteData({{tag.tag_id}}, 2)">{{tag.name}}</button>
@@ -90,6 +90,15 @@
                         <hr>
                         <!-- Text generator -->
                         <div class="cmd-text">
+                            <!-- Indicator generator -->
+                            {% for tag in indicator_list %}
+                                {% if tag.display == "INDICATOR" %}
+                                <div class="cmd-indicator ON">
+                                    <span>{{tag.name}}</span>
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+
                             {% for tag in indicator_list %}
                                 {% if tag.data_type == "ERROR CODE" %}
                                 <input id="assTag{{tag.tag_id}}"  type="hidden"/>
@@ -104,12 +113,14 @@
                                     </div>   
                                 {% endif %}
                             {% endfor %}
+                            
                             {% for tag in indicator_list %}
-                                {% if tag.data_type == "ASCII" %}
+                                {% if tag.data_type == "STRING" %}
                                 <input id="assTag{{tag.tag_id}}"  type="hidden"/>
                                     <label>{{tag.name}}</label>
                                     <div class="cmd-text-send">
-                                        <input type="text" id="mTagValue{{tag.tag_id}}"/><button onclick="WriteData({{tag.tag_id}}, 1)">Send</button>
+                                        <input type="text" id="mTagValue{{tag.tag_id}}"/>
+                                        <button onclick="WriteData({{tag.tag_id}}, 1)">Send</button>
                                     </div>
                                 {% endif %}
                             {% endfor %}
@@ -173,7 +184,7 @@
                     <option value="BIT">BIT</option>
                     <!-- <option value="INT">INT</option>
                     <option value="FLOAT">FLOAT</option> -->
-                    <option value="ASCII">STRING</option>
+                    <option value="STRING">STRING</option>
                     <option value="STATUS">STATUS</option>
                     <option value="ERROR CODE">ERROR CODE</option>
                 </select>
