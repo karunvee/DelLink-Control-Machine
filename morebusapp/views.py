@@ -84,6 +84,15 @@ def setting_view(request):
     return HttpResponse(template.render({}, request))
 
 def item_view(request, ln ,id="0"):
+
+        #Check data of camera exist or not
+        if(MachineInfo.objects.filter(line_name__id__exact = ln, machineID__exact = id).exists()):
+            camera_ip = MachineInfo.objects.get(line_name__id__exact = ln, machineID__exact = id)
+            data_camera = "Exist"
+        else:
+            camera_ip = "No data"
+            data_camera = "Not exist"
+
         line_ = LineInfo.objects.get(id = ln)
         DIA_http = 'http://' + line_.ip + ':' + line_.port
         ip = get_client_ip(request)
@@ -139,6 +148,8 @@ def item_view(request, ln ,id="0"):
         if t_response.status_code == requests.codes.ok or t_response.status_code == requests.codes.no_content:
             tag_data = t_response.json()
             context = {
+                'data_camera' : data_camera,
+                'camera_ip' : camera_ip,
                 'notification_error' : notification_error,
                 'status_member' : status_member,
                 'indicator_list' : indicator_list,
@@ -170,9 +181,21 @@ def delete_indicator(request, ln ,id="0", tid="0"):
     return redirect('/machine_view/ln' + ln + 'id' +id +'/')
 
 @gzip.gzip_page
-def camera_view(request, id):
+def camera_view(request, ln, id):
+    if(MachineInfo.objects.filter(line_name__id__exact = ln, machineID__exact = id).exists()):
+        camera_ip = MachineInfo.objects.get(line_name__id__exact = ln, machineID__exact = id)
+        print("%s Data of camera exist! line: %s id: %s >>> %s" % (request, ln, id, camera_ip))
+        if internet_on("http://%s" % (camera_ip)) == False:
+            print("IP: %s is no connected camera" % camera_ip)
+            return render(request, 'camera_view.html')
+        else:
+            print("IP: %s is connected!" % camera_ip)
+    else:
+        print("%s Data of camera doesn't exist! line: %s id: %s" % (request, ln, id))
+        return render(request, 'camera_view.html', {'data_exist' : "False"})
+    
     try:
-        rtsp = "rtsp://admin:admin123@192.168.1.168/cam/realmonitor?channel=1&subtype=00"
+        rtsp = "rtsp://admin:admin123@"+ str(camera_ip) + "/cam/realmonitor?channel=1&subtype=00"
         cam = VideoCamera(rtsp)
         return StreamingHttpResponse(gen(cam), content_type="multipart/x-mixed-replace;boundary=frame")
     except:
@@ -210,10 +233,15 @@ def gen(camera):
 
 
 def event_stream():
+    url_line = 'https://notify-api.line.me/api/notify'
+    token = 'qaWZ8dMyve2tNXOXtL2nb99KqkIsbwcZ9QYhjEuI4qP'
+    headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
+
     machine_members = dict()
     ini_data = ""
 
     line_ = LineInfo.objects.all()
+
 
     for m_ip in line_:           #loop for get ip and port of each lines.
         m_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
@@ -239,16 +267,21 @@ def event_stream():
                     for val in data_tag:
                         if val['name'] == 'errorCode_test':     #filter find only statusCode
                             
-                            if val['value'] != 0 :
+                            if val['value'] != "0" :
+
                                 print("###\nLine name :%s | deviceId :%s | tagId :%s | tagName :%s ==>> value :%s\n###" % (line_name.name, str(val['deviceId']), str(val['tid']),  val['name'], str(val['value'])))
 
                                 if ErrorNotification.objects.filter(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value']).exists():
                                     error_msg = ErrorNotification.objects.get(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value'])
                                     print(error_msg)
-                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' : error_msg.error_message }, cls=DjangoJSONEncoder)
+                                    msg = "Error occurred! line:%s machine: %s\nmessage: %s" % (line_name.name, val['comment'],  error_msg.error_message)
+                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' : error_msg.error_message , 'error_number' : val['value']}, cls=DjangoJSONEncoder)
                                 else:
-                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' :'Unknown error' }, cls=DjangoJSONEncoder)
+                                    msg = "Error occurred! line:%s machine: %s\nmessage: %s" % (line_name.name, val['comment'],  'Unknown error')
+                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' :'Unknown error', 'error_number' : val['value'] }, cls=DjangoJSONEncoder)
                                 
+                               
+                                requests.post(url_line, headers=headers, data = {'message':msg})
                                 if not ini_data == data:
                                     # data = json.dumps(val, cls=DjangoJSONEncoder)
                                     # # data = json.dumps(list(ErrorNotification.objects.order_by("-id").values("error_code", 
@@ -257,7 +290,7 @@ def event_stream():
                                     # #     )
                                     yield "\ndata: {}\n\n".format(data)
                                     ini_data = data
-                time.sleep(0.2)
+                time.sleep(0.3)
 class ErrorStreamView(View):
     def get(self, request):
         response = StreamingHttpResponse(event_stream())

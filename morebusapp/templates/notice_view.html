@@ -17,26 +17,13 @@
             <div class="header-container">
                 <h3>Error Notification</h3>
                 <div class="alert-count">
-                    <span>3</span>
+                    <span>0</span>
                 </div>
             </div>
             <div>
                 {% include "notice_msg.html" %}
-                {% for i in '0'|make_list %}
-                    <!-- {{ forloop.counter }} -->
-                    <div class="alert">
-                        <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
-                        <div class="alert-header">
-                            <span><strong>&ensp;1 Lorem, ipsum dolor.&ensp;</strong></span>
-                            <div class="alert-tag">
-                                <span>&ensp;CN05&ensp;</span>
-                                <span>&ensp;Auto Load Router&ensp;</span>
-                            </div>
-                        </div>
-                        <hr> 
-                        <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi nam, aliquid eos et cupiditate, quas possimus repellat a modi quam aspernatur rem aperiam incidunt ad deleniti ipsa atque sunt iusto?</span> 
-                    </div>
-                {% endfor %}
+                <div id="error-msg-container">
+                </div>   
                 
             </div>
         </div>
@@ -49,10 +36,22 @@
         }
         eventsource.onmessage = function(e){
             console.log(e);
-            // final_data = JSON.parse(e.data);
-            // content = `<h1>${final_data['deviceId']} ${final_data['name']} ${final_data['tid']} ${final_data['value']}</h1>`;
+            final_data = JSON.parse(e.data);
+            content = `<div class="alert">
+                        <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+                        <div class="alert-header">
+                            <span><strong>&ensp; Error ${final_data['error_number']} &ensp;</strong></span>
+                            <div class="alert-tag">
+                                <span>&ensp; ${final_data['line_name']} &ensp;</span>
+                                <span>&ensp; ${final_data['machine_name']} &ensp;</span>
+                            </div>
+                        </div>
+                        <hr> 
+                        <span> ${final_data['error_message']} </span> 
+                    </div>`;
             
             console.log(content);
+            document.querySelector('#error-msg-container').innerHTML += content;
         }
         eventsource.onerror = function(e){
             console.log(`error ${e}`);

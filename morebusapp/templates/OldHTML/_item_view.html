@@ -100,3 +100,20 @@
     </script> -->
 </body>
 </html>
+
+
+{% for i in '0'|make_list %}
+<!-- {{ forloop.counter }} -->
+<div class="alert">
+    <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
+    <div class="alert-header">
+        <span><strong>&ensp;1 Lorem, ipsum dolor.&ensp;</strong></span>
+        <div class="alert-tag">
+            <span>&ensp;CN05&ensp;</span>
+            <span>&ensp;Auto Load Router&ensp;</span>
+        </div>
+    </div>
+    <hr> 
+    <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quasi nam, aliquid eos et cupiditate, quas possimus repellat a modi quam aspernatur rem aperiam incidunt ad deleniti ipsa atque sunt iusto?</span> 
+</div>
+{% endfor %}

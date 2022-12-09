@@ -84,10 +84,24 @@
                         btn.classList.add("OFF");
                     }
                 }
+                
                 var text_tag = document.getElementById("mTagValue" + String(val.tid));
                 if(text_tag != null){
                     if(text_tag !== document.activeElement){
                         document.getElementById("mTagValue"+String(val.tid)).value = val.value;
+                    }
+                }
+
+                var indicator_tag = document.getElementById("indicator"+ String(val.tid))
+                if (indicator_tag != null){
+                    const ind_show = document.querySelector('#indicator'+String(val.tid));
+                    if(val.value == 1){
+                        ind_show.classList.remove("OFF");
+                        ind_show.classList.add("ON");
+                    }
+                    else{
+                        ind_show.classList.remove("ON");
+                        ind_show.classList.add("OFF");
                     }
                 }
 

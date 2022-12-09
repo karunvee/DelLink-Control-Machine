@@ -32,15 +32,14 @@ class Indicator(models.Model):
         return "%s %s %s" % (self.name, self.lineID, self.machineID)
 
 class MachineInfo(models.Model):
-    line_name = models.OneToOneField(LineInfo, on_delete=models.CASCADE)
+    line_name = models.ForeignKey(LineInfo, on_delete=models.CASCADE, null=True)
     machineID = models.CharField(max_length = 255)
-    lineID = models.CharField(max_length = 255)
     machine_no = models.CharField(max_length = 255)
     machine_name = models.CharField(max_length = 255)
     ip_camera = models.CharField(max_length = 255)
 
     def __str__(self):
-        return self.machine_name
+        return self.ip_camera
     
 class ErrorNotification(models.Model):
     tag_member = models.ForeignKey(Indicator, on_delete=models.CASCADE, null=True)

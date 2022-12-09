@@ -58,8 +58,18 @@
             <section class="body-content">
                 <div class="pnl box-camera">
                     <h5 class="head-pnl">RTSP camera</h5>
-                    <img src="{% url 'camera_view' 1 %}" width="100%" height="450px" 
+                    <img src="{% url 'camera_view' lineID mID %}" width="100%" height="470px" 
                     onerror="this.onerror=null; this.src='{% static 'img/camera-not-found.jpg' %}'" loading="lazy">
+                    <div class="camera-info">
+                        <div>
+                            {% if data_camera == "Exist" %}
+                            <span>IP camera is {{camera_ip}}.</span>
+                            {% else %}
+                            <span>This machine have no IP camera assigned.</span>
+                            <button>Assign</button>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
                 <div class="pnl box-command-monitor">
                     <h5 class="head-pnl">Monitor & Controller</h5>
@@ -93,7 +103,7 @@
                             <!-- Indicator generator -->
                             {% for tag in indicator_list %}
                                 {% if tag.display == "INDICATOR" %}
-                                <div class="cmd-indicator ON">
+                                <div id="indicator{{tag.tag_id}}" class="cmd-indicator OFF">
                                     <span>{{tag.name}}</span>
                                 </div>
                                 {% endif %}

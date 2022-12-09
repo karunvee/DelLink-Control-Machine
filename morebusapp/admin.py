@@ -33,7 +33,7 @@ class IndicatorAdmin(admin.ModelAdmin):
 admin.site.register(Indicator, IndicatorAdmin)
 
 class MachineInfoAdmin(admin.ModelAdmin):
-    list_display = ('lineID', 'machineID', 'line_name', 'machine_no', 'machine_name', 'ip_camera')
+    list_display = ('machineID', 'line_name', 'machine_no', 'machine_name', 'ip_camera')
 admin.site.register(MachineInfo, MachineInfoAdmin)
 
 class ErrorNotificationAdmin(admin.ModelAdmin):
