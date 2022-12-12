@@ -12,7 +12,7 @@ import urllib.request
 import cv2
 from django.views.decorators import gzip
 import threading
-import logging
+from datetime import datetime
 
 SERVER_IP = '10.234.232.101'
 
@@ -112,7 +112,11 @@ def item_view(request, ln ,id="0"):
             tag_id = request.POST['tagID']
             register = request.POST['register']
             data_type = request.POST['data_type']
-            display = request.POST['display_type']
+            if data_type == 'BIT':
+                display = request.POST['display_type_bit']
+            else:
+                display = request.POST['display_type_text']
+            
             color = request.POST['color']
             indicator_member = Indicator(machineID = machineID, lineID = lineID, name = name, tag_id = tag_id, register = register, data_type = data_type, display = display, color = color)
             indicator_member.save()
@@ -186,7 +190,7 @@ def camera_view(request, ln, id):
         camera_ip = MachineInfo.objects.get(line_name__id__exact = ln, machineID__exact = id)
         print("%s Data of camera exist! line: %s id: %s >>> %s" % (request, ln, id, camera_ip))
         if internet_on("http://%s" % (camera_ip)) == False:
-            print("IP: %s is no connected camera" % camera_ip)
+            print("IP: %s is not connected the camera" % camera_ip)
             return render(request, 'camera_view.html')
         else:
             print("IP: %s is connected!" % camera_ip)
@@ -238,8 +242,9 @@ def event_stream():
     headers = {'content-type':'application/x-www-form-urlencoded','Authorization':'Bearer '+token}
 
     machine_members = dict()
+    msg_notice = list()
     ini_data = ""
-
+    now = datetime.now()
     line_ = LineInfo.objects.all()
 
 
@@ -259,27 +264,27 @@ def event_stream():
             port = key.split(':')[1]
             line_name = LineInfo.objects.get(ip__exact = ip)   #get Line name
             for id in machine_members[key]:
-                
-                print(ip + ':' + port + '>>' + str(id))
+                http_link = "http://10.234.232.101:8000/machine_view/ln%sid%s/" % (str(line_name.id), str(id))
+                # print(ip + ':' + port + '>>' + str(id))         #Print every machine and every line
                 t_response = requests.get(ReturnHttpDIA(ip, port, 'devices/' + str(id) + '/tags'))
                 if t_response.status_code == requests.codes.ok or t_response.status_code == requests.code.no_content:
                     data_tag = t_response.json()
                     for val in data_tag:
                         if val['name'] == 'errorCode_test':     #filter find only statusCode
                             
-                            if val['value'] != "0" :
-
-                                print("###\nLine name :%s | deviceId :%s | tagId :%s | tagName :%s ==>> value :%s\n###" % (line_name.name, str(val['deviceId']), str(val['tid']),  val['name'], str(val['value'])))
+                            if val['value'] != "0" and http_link not in msg_notice:
+                                msg_notice.append(http_link)
+                                print("!!!!Error message alert!!!! >>>\nLine name :%s | deviceId :%s | tagId :%s | tagName :%s ==>> value :%s\n###" % (line_name.name, str(val['deviceId']), str(val['tid']),  val['name'], str(val['value'])))
 
                                 if ErrorNotification.objects.filter(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value']).exists():
                                     error_msg = ErrorNotification.objects.get(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value'])
-                                    print(error_msg)
-                                    msg = "Error occurred! line:%s machine: %s\nmessage: %s" % (line_name.name, val['comment'],  error_msg.error_message)
+                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : %s \n\n%s" % (line_name.name, val['comment'],  error_msg.error_message, http_link)
                                     data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' : error_msg.error_message , 'error_number' : val['value']}, cls=DjangoJSONEncoder)
                                 else:
-                                    msg = "Error occurred! line:%s machine: %s\nmessage: %s" % (line_name.name, val['comment'],  'Unknown error')
+                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : %s \n\n%s" % (line_name.name, val['comment'],  'Unknown error', http_link)
                                     data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' :'Unknown error', 'error_number' : val['value'] }, cls=DjangoJSONEncoder)
                                 
+                               
                                
                                 requests.post(url_line, headers=headers, data = {'message':msg})
                                 if not ini_data == data:
@@ -290,7 +295,15 @@ def event_stream():
                                     # #     )
                                     yield "\ndata: {}\n\n".format(data)
                                     ini_data = data
+
+                            elif val['value'] == "0" and http_link in msg_notice:
+                                msg_notice.remove(http_link)
+                                print(http_link + ' was removed!!')
+
                 time.sleep(0.3)
+
+            current_time = now.strftime("[%d/%b/%Y  %H:%M:%S] Notification listening from :" + line_name.name )
+            print(current_time)   
 class ErrorStreamView(View):
     def get(self, request):
         response = StreamingHttpResponse(event_stream())

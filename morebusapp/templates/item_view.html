@@ -63,9 +63,9 @@
                     <div class="camera-info">
                         <div>
                             {% if data_camera == "Exist" %}
-                            <span>IP camera is {{camera_ip}}.</span>
+                            <span>IP camera : {{camera_ip}}.</span>
                             {% else %}
-                            <span>This machine have no IP camera assigned.</span>
+                            <span>This machine have not been assigned an IP.</span>
                             <button>Assign</button>
                             {% endif %}
                         </div>
@@ -103,6 +103,7 @@
                             <!-- Indicator generator -->
                             {% for tag in indicator_list %}
                                 {% if tag.display == "INDICATOR" %}
+                                <input id="assTag{{tag.tag_id}}"  type="hidden"/>
                                 <div id="indicator{{tag.tag_id}}" class="cmd-indicator OFF">
                                     <span>{{tag.name}}</span>
                                 </div>
@@ -200,7 +201,7 @@
                 </select>
                 <div id="datatype_bit" style="display: none;">
                     <strong>Display type</strong>
-                    <select id="display_type" name="display_type">
+                    <select id="display_type" name="display_type_bit">
                         <option value="BUTTON">BUTTON</option>
                         <option value="INDICATOR">INDICATOR</option>
                     </select>
@@ -225,9 +226,9 @@
                 </div>
                 <div id="datatype_text" style="display: none;">
                     <strong>Display type</strong>
-                    <select id="display_type" name="display_type">
-                        <option value="TEXT">TEXT</option>
+                    <select id="display_type" name="display_type_text">
                         <option value="NUMBER">NUMBER</option>
+                        <option value="TEXT">TEXT</option>
                     </select>
                 </div>
                 <hr>
