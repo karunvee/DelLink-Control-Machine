@@ -249,15 +249,16 @@ def event_stream():
 
 
     for m_ip in line_:           #loop for get ip and port of each lines.
-        m_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
-        if m_response.status_code == requests.codes.ok or m_response.status_code == requests.codes.no_content:
-            response_data = m_response.json()
-            deviceList = []               #array for container all deviceId. and clear array to be empty
-            for val in response_data:     #loop for insert each deviceId to array
-                deviceList.append(val['deviceId'])      #insert to array
-            key_ = m_ip.ip + ':' + m_ip.port
-            if key_ not in machine_members:          #make sure these array is not duplicate inserting
-                machine_members[key_] = deviceList  #insert key and data(array) to dictionary
+        if internet_on("http://%s:%s" % (m_ip.ip, m_ip.port)) == True:
+            m_response = requests.get(ReturnHttpDIA(m_ip.ip, m_ip.port, 'devices'))
+            if m_response.status_code == requests.codes.ok or m_response.status_code == requests.codes.no_content:
+                response_data = m_response.json()
+                deviceList = []               #array for container all deviceId. and clear array to be empty
+                for val in response_data:     #loop for insert each deviceId to array
+                    deviceList.append(val['deviceId'])      #insert to array
+                key_ = m_ip.ip + ':' + m_ip.port
+                if key_ not in machine_members:          #make sure these array is not duplicate inserting
+                    machine_members[key_] = deviceList  #insert key and data(array) to dictionary
     while True: 
         for key in machine_members.keys():  #find those key from dictionary
             ip = key.split(':')[0]
@@ -270,19 +271,34 @@ def event_stream():
                 if t_response.status_code == requests.codes.ok or t_response.status_code == requests.code.no_content:
                     data_tag = t_response.json()
                     for val in data_tag:
-                        if val['name'] == 'errorCode_test':     #filter find only statusCode
-                            
-                            if val['value'] != "0" and http_link not in msg_notice:
+                        if val['name'] == 'statuscode' or val['name'] == 'statusCode':     #filter find only statusCode
+
+                            if val['value'] != "0" and val['value'] != "" and http_link not in msg_notice:
                                 msg_notice.append(http_link)
                                 print("!!!!Error message alert!!!! >>>\nLine name :%s | deviceId :%s | tagId :%s | tagName :%s ==>> value :%s\n###" % (line_name.name, str(val['deviceId']), str(val['tid']),  val['name'], str(val['value'])))
 
                                 if ErrorNotification.objects.filter(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value']).exists():
                                     error_msg = ErrorNotification.objects.get(tag_member__machineID = val['deviceId'], tag_member__lineID = str(line_name.id), error_code__exact = val['value'])
-                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : %s \n\n%s" % (line_name.name, val['comment'],  error_msg.error_message, http_link)
-                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' : error_msg.error_message , 'error_number' : val['value']}, cls=DjangoJSONEncoder)
+                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : (%s) %s \n\n%s" % (line_name.name, val['comment'],   val['value'],error_msg.error_message, http_link)
+                                    ct = {'line_name' : line_name.name,
+                                                'machine_name' : val['comment'],
+                                                'error_message' : error_msg.error_message,
+                                                'error_number' : val['value'],
+                                                'lineID' : line_name.id,
+                                                'deviceID' : val['deviceId'],
+                                                }
+
+                                    data = json.dumps(ct , cls=DjangoJSONEncoder)
                                 else:
-                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : %s \n\n%s" % (line_name.name, val['comment'],  'Unknown error', http_link)
-                                    data = json.dumps({'line_name' : line_name.name, 'machine_name' : val['comment'], 'error_message' :'Unknown error', 'error_number' : val['value'] }, cls=DjangoJSONEncoder)
+                                    msg = "\nError occurred!\n *line* : %s \n *machine* : %s \n *message* : (%s) %s \n\n%s" % (line_name.name, val['comment'],  val['value'],'Unknown error', http_link)
+                                    ct = {'line_name' : line_name.name,
+                                                'machine_name' : val['comment'],
+                                                'error_message' : "Error unknown, this error is not defined!",
+                                                'error_number' : val['value'],
+                                                'lineID' : line_name.id,
+                                                'deviceID' : val['deviceId'],
+                                                }
+                                    data = json.dumps(ct , cls=DjangoJSONEncoder)
                                 
                                
                                

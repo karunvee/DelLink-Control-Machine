@@ -24,3 +24,8 @@ S400 : Home
 S401 : Start
 S402 : Pause
 S403 : Stop
+
+
+wsl --install -d Ubuntu
+Ubuntu cmd
+root@user-pc: cd /mnt/d/your_destination_directory

@@ -307,6 +307,11 @@
                 document.getElementById('datatype_text').style.display = "none";
                 document.getElementById('btn-add').style.display = "none";
             }
+            else if(inputValue == "STATUS" || inputValue == "ERROR CODE"){
+                document.getElementById('datatype_bit').style.display = "none";
+                document.getElementById('datatype_text').style.display = "none";
+                document.getElementById('btn-add').style.display = "block";
+            }
             else{
                 document.getElementById('datatype_bit').style.display = "none";
                 document.getElementById('datatype_text').style.display = "block";

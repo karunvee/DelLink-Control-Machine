@@ -35,12 +35,13 @@
             console.log("we have an open connection!");
         }
         eventsource.onmessage = function(e){
+            
             console.log(e);
             final_data = JSON.parse(e.data);
-            content = `<div class="alert">
+            content = `<div class="alert" onclick="location.href='{% url 'item_view' 2 1 %}';">
                         <!-- <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>  -->
                         <div class="alert-header">
-                            <span><strong>&ensp; Error ${final_data['error_number']} &ensp;</strong></span>
+                            <span><strong>&ensp; Error code : ${final_data['error_number']} &ensp;</strong></span>
                             <div class="alert-tag">
                                 <span>&ensp; ${final_data['line_name']} &ensp;</span>
                                 <span>&ensp; ${final_data['machine_name']} &ensp;</span>
@@ -50,7 +51,6 @@
                         <span> ${final_data['error_message']} </span> 
                     </div>`;
             
-            console.log(content);
             document.querySelector('#error-msg-container').innerHTML += content;
         }
         eventsource.onerror = function(e){

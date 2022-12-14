@@ -343,8 +343,9 @@ input:focus{
   .text-error-code{
     display: flex;
     margin-bottom: 15px;
-    background-color: rgb(255, 233, 233);
+    background-color: #9f9f9f;
     border-radius: 10px;
+    color: white;
   }
   .text-error-code input{
     text-align: center;
@@ -352,6 +353,7 @@ input:focus{
     background-color: transparent;
     width: 60px;
     font-size: 18px;
+    color: white;
   }
 
   .btn-control-page{
@@ -514,14 +516,14 @@ input:focus{
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: #CCCCCC;
+  background-color: #9f9f9f;
   border-radius: 10px;
 }
 .cmd-indicator.ON{
   background-color: #7aca62;
 }
 .cmd-indicator.OFF{
-  background-color: #CCCCCC;
+  background-color: #9f9f9f;
 }
 .cmd-indicator span{
   color: #ffff;
