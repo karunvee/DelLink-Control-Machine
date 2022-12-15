@@ -178,63 +178,65 @@
     </div>
     <!-- Indicator assignment form -->
     <div id="assignForm" class="form">
-        <form class="form-container" action="/machine_view/ln{{lineID}}id{{mID}}/" method="post">
-            <div class="form-content">
-                {% csrf_token %}
-                <h2>Indicator assignment</h2>
-                <strong>information</strong><br>
-                <div class="form-info">
-                    <label>Tag name : </label><input type="text" id="tagName" name="tagName" />
-                    <label>Tag ID : </label><input type="text" id="tagID" name="tagID" />
-                    <label>Register : </label><input type="text" id="register" name="register" />
+        <form action="/machine_view/ln{{lineID}}id{{mID}}/" method="post">
+            <div class="form-container">
+                <div class="form-content">
+                    {% csrf_token %}
+                    <h2>Indicator assignment</h2>
+                    <strong>information</strong><br>
+                    <div class="form-info">
+                        <label>Tag name : </label><input type="text" id="tagName" name="tagName" />
+                        <label>Tag ID : </label><input type="text" id="tagID" name="tagID" />
+                        <label>Register : </label><input type="text" id="register" name="register" />
+                        <hr>
+                    </div>
+                    <strong>Data type</strong>
+                    <select id="data_type" name="data_type" onchange="getDataType()">
+                        <option value="">-</option>
+                        <option value="BIT">BIT</option>
+                        <!-- <option value="INT">INT</option>
+                        <option value="FLOAT">FLOAT</option> -->
+                        <option value="STRING">STRING</option>
+                        <option value="STATUS">STATUS</option>
+                        <option value="ERROR CODE">ERROR CODE</option>
+                    </select>
+                    <div id="datatype_bit" style="display: none;">
+                        <strong>Display type</strong>
+                        <select id="display_type" name="display_type_bit">
+                            <option value="BUTTON">BUTTON</option>
+                            <option value="INDICATOR">INDICATOR</option>
+                        </select>
+                        <strong>Color</strong>
+                            <div>
+                                <input type="radio" id="c1" name="color" value="#3282B8" checked/>
+                                <input type="color" id="btn_color1" name="color" value="#3282B8" disabled/>
+                                <label for="c1">Blue</label>
+                                <br>
+                                <input type="radio" id="c2" name="color" value="#50a920" />
+                                <input type="color" id="btn_color2" name="color" value="#50a920" disabled/>
+                                <label for="c2">Green</label>
+                                <br>
+                                <input type="radio" id="c3" name="color" value="#f9d922" />
+                                <input type="color" id="btn_color3" name="color" value="#f9d922" disabled/>
+                                <label for="c3">Yellow</label>
+                                <br>
+                                <input type="radio" id="c4" name="color" value="#e52d24" />
+                                <input type="color" id="btn_color4" name="color" value="#e52d24" disabled/>
+                                <label for="c4">Red</label>
+                              </div>
+                    </div>
+                    <div id="datatype_text" style="display: none;">
+                        <strong>Display type</strong>
+                        <select id="display_type" name="display_type_text">
+                            <option value="NUMBER">NUMBER</option>
+                            <option value="TEXT">TEXT</option>
+                        </select>
+                    </div>
                     <hr>
-                </div>
-                <strong>Data type</strong>
-                <select id="data_type" name="data_type" onchange="getDataType()">
-                    <option value="">-</option>
-                    <option value="BIT">BIT</option>
-                    <!-- <option value="INT">INT</option>
-                    <option value="FLOAT">FLOAT</option> -->
-                    <option value="STRING">STRING</option>
-                    <option value="STATUS">STATUS</option>
-                    <option value="ERROR CODE">ERROR CODE</option>
-                </select>
-                <div id="datatype_bit" style="display: none;">
-                    <strong>Display type</strong>
-                    <select id="display_type" name="display_type_bit">
-                        <option value="BUTTON">BUTTON</option>
-                        <option value="INDICATOR">INDICATOR</option>
-                    </select>
-                    <strong>Color</strong>
-                        <div>
-                            <input type="radio" id="c1" name="color" value="#3282B8" checked/>
-                            <input type="color" id="btn_color1" name="color" value="#3282B8" disabled/>
-                            <label for="c1">Blue</label>
-                            <br>
-                            <input type="radio" id="c2" name="color" value="#50a920" />
-                            <input type="color" id="btn_color2" name="color" value="#50a920" disabled/>
-                            <label for="c2">Green</label>
-                            <br>
-                            <input type="radio" id="c3" name="color" value="#f9d922" />
-                            <input type="color" id="btn_color3" name="color" value="#f9d922" disabled/>
-                            <label for="c3">Yellow</label>
-                            <br>
-                            <input type="radio" id="c4" name="color" value="#e52d24" />
-                            <input type="color" id="btn_color4" name="color" value="#e52d24" disabled/>
-                            <label for="c4">Red</label>
-                          </div>
-                </div>
-                <div id="datatype_text" style="display: none;">
-                    <strong>Display type</strong>
-                    <select id="display_type" name="display_type_text">
-                        <option value="NUMBER">NUMBER</option>
-                        <option value="TEXT">TEXT</option>
-                    </select>
-                </div>
-                <hr>
-                <div class="clearfix">
-                    <button id="btn-add" class="add" type="submit" style="display: none;">Add</button>
-                    <button class="cancel" type="button" onclick="document.getElementById('assignForm').style.display='none'">Cancel</button>
+                    <div class="clearfix">
+                        <button id="btn-add" class="add" type="submit" style="display: none;">Add</button>
+                        <button class="cancel" type="button" onclick="document.getElementById('assignForm').style.display='none'">Cancel</button>
+                    </div>
                 </div>
             </div>
         </form>
